@@ -14,7 +14,7 @@ form.addEventListener('submit', e => {
     }
     let data = {};
     let link = window.location.href;
-    const linkToken = link.slice(37);
+    const linkToken = link.slice(39);
     console.log(linkToken);
     data = {
         password: password.value,
@@ -22,25 +22,25 @@ form.addEventListener('submit', e => {
     };
 
     fetch('https://termsbuddy.herokuapp.com/api/password-reset/confirm/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        }).then(res => {
-            if (res.status === 200) {
-                window.location.href = 'https://abshaibu.github.io/test-P71/';
-            } else {
-                incorrect.style.display = 'flex';
-                errorText.innerHTML = 'Password must be at least 8 characters long';
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    }).then(res => {
+        if (res.status === 200) {
+            window.location.href = 'https://abshaibu.github.io/test-P71/dashboard/dashboard.html';
+        } else {
+            incorrect.style.display = 'flex';
+            errorText.innerHTML = 'Password must be at least 8 characters long';
 
-                setTimeout(() => {
-                    incorrect.style.display = 'none';
-                }, 2500)
-            }
-            console.log(res);
-            return res.json()
-        }).then(data => console.log(data))
+            setTimeout(() => {
+                incorrect.style.display = 'none';
+            }, 2500)
+        }
+        console.log(res);
+        return res.json()
+    }).then(data => console.log(data))
         .catch(error => console.log(error));
 })
 

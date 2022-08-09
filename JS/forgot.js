@@ -35,5 +35,5 @@ form.addEventListener('submit', e => {
         return res.json()
     }).then(data => console.log(data))
         .catch(error => console.log(error));
-    window.location.href = 'http://127.0.0.1:5500/login.html';
+    window.location.href = 'https://abshaibu.github.io/test-P71/login.html';
 })

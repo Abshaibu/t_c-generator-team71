@@ -4,7 +4,9 @@ const inputType=document.getElementById('password')
 const firstName=document.getElementById('firstName')
 const lastName=document.getElementById('lastName')
 const email=document.getElementById('email')
-const checkBox=document.getElementById('checkbox')
+const checkBox = document.getElementById('checkbox')
+const incorrect = document.querySelector('.incorrect')
+const incorrectText = document.querySelector('.incorrect-text')
 
 
 let password=true
@@ -48,7 +50,7 @@ form.addEventListener('submit', e => {
             body: JSON.stringify(data)
         }).then(res => {
             if (res.status === 201) {
-                window.location.href = 'http://127.0.0.1:5500/dashboard.html'
+                window.location.href = 'https://abshaibu.github.io/test-P71/dashboard/dashboard.html'
             } else {
                 incorrect.style.display = 'flex';
                 incorrectText.innerHTML = 'Email already exists';

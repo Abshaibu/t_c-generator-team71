@@ -27,50 +27,50 @@ form.addEventListener('submit', (e) => {
     e.preventDefault();
 
     if (email.value === '' && inputType.value === '') {
-            form.classList.add('error')
+        form.classList.add('error')
         setTimeout(() => {
             form.classList.remove('error')
         }, 2500)
     } else if (email.value === '') {
         form.classList.add('error1')
-        setTimeout(() => { 
+        setTimeout(() => {
             form.classList.remove('error1')
         }, 2500)
-    } else if (inputType.value === '') { 
+    } else if (inputType.value === '') {
         form.classList.add('error2')
         setTimeout(() => {
             form.classList.remove('error2')
-        },2500)
+        }, 2500)
     }
 
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
-console.log(data);
+    console.log(data);
 
     fetch('https://termsbuddy.herokuapp.com/api/token/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        }).then(res => {
-            if (res.status === 201) {
-                window.location.href = 'http://127.0.0.1:5500/dashboard.html'
-            } else {
-                incorrect.style.display = 'flex';
-                incorrectText.innerHTML = 'Incorrect email or password';
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }).then(res => {
+        if (res.status === 201) {
+            window.location.href = 'https://abshaibu.github.io/test-P71/dashboard/dashboard.html'
+        } else {
+            incorrect.style.display = 'flex';
+            incorrectText.innerHTML = 'Incorrect email or password';
 
-                setTimeout(() => {
-                    incorrect.style.display = 'none';
-                }, 2500)
-            }
-            console.log(res);
-            return res.json();
-        }).then(data => {
-            console.log(data)
-            const authToken = data.tokens.refresh;
-            localStorage.setItem('token', authToken);
-        }).catch(error => console.log(error));
+            setTimeout(() => {
+                incorrect.style.display = 'none';
+            }, 2500)
+        }
+        console.log(res);
+        return res.json();
+    }).then(data => {
+        console.log(data)
+        const authToken = data.tokens.refresh;
+        localStorage.setItem('token', authToken);
+    }).catch(error => console.log(error));
 
 })
 
