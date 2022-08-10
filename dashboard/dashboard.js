@@ -8,7 +8,6 @@ const toggler = document.querySelectorAll('.toggler');
 const modalOnes = document.querySelectorAll('.modal1-btn');
 const modalTwos = document.querySelectorAll('.modal2-btn');
 const body = document.querySelector('body');
-let docDetails;
 
 
 // Sidebar Toggler
@@ -74,7 +73,6 @@ priDetails.addEventListener('submit', (e) => {
     const formData = new FormData(priDetails);
     const data = Object.fromEntries(formData);
     localStorage.setItem('privacy', data.document_name);
-    docDetails = localStorage.getItem('privacy');
     document.querySelector('.inner-preview').innerHTML = generatePrivacyTemplate(data);
 
     modalTwo.classList.add('add-progress');
@@ -115,7 +113,7 @@ $(document).ready(function () {
 // Preview Template
 const preview = `
        <div class="show-preview">
-        <h1 class="preview-heading">Preview of your ${docDetails} document</h1>
+        <h1 class="preview-heading">Preview of your ${localStorage.getItem('privacy')} document</h1>
         <div class="preview-wrapper">
             <div class="inner-preview">
 
@@ -268,7 +266,7 @@ function generateTermsTemplate(data) {
 
     template = sections.intro // setting the default value of templates to intro
 
-    Object.keys(data).slice(2).forEach((key) => {
+    Object.keys(data).slice(5).forEach((key) => {
         let container = `<div>${sections[key]}</div>` // storing each object property in a div
         template += container // appending the agreement content to template
     })
