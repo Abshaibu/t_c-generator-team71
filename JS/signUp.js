@@ -53,7 +53,7 @@ form.addEventListener('submit', e => {
                 window.location.href = 'https://abshaibu.github.io/test-P71/dashboard/dashboard.html'
             } else {
                 incorrect.style.display = 'flex';
-                incorrectText.innerHTML = 'Email already exists';
+                incorrect.innerHTML = 'Email already exists'
 
                 setTimeout(() => {
                     incorrect.style.display = 'none';

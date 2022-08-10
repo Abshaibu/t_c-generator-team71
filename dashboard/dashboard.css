@@ -560,14 +560,14 @@ input[type="checkbox"] {
     border-radius: 1rem;
     background: #FEFEFE;
     position: absolute;
-    top: 7rem;
+    top: -8rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 1.9rem;
     right: 0;
     opacity: 0;
-    transition: all 0.25s linear;
+    transition: all 0.35s linear;
     z-index: -4;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
@@ -575,7 +575,7 @@ input[type="checkbox"] {
 .show-more {
     opacity: 1;
     z-index: 3;
-    top: 13.5rem;
+    top: -13.5rem;
 }
 
 .more button {
@@ -588,6 +588,15 @@ input[type="checkbox"] {
     display: flex;
     align-items: center;
     gap: 1rem;
+}
+
+.inner-preview h2 {
+    margin: 1rem 0 .6rem;
+}
+
+.inner-preview a {
+    text-transform: lowercase;
+    font-size: 1.2rem;
 }
 
 /* Profile Tab */

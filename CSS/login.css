@@ -329,3 +329,9 @@ input:focus {
     width: 400px;
   }
 }
+
+
+.signup-text {
+  margin-top: 1rem;
+  text-align: center;
+}
