@@ -70,6 +70,7 @@ form.addEventListener('submit', e => {
                 id: data.id
             }
             localStorage.setItem('credentials', JSON.stringify(authToken));
+            return authToken;
         }).catch(error => console.log(error));
     } else {
 

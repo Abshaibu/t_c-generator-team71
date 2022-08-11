@@ -48,12 +48,9 @@ modalTwos.forEach(modal2 => {
 const bizDetails = document.querySelector(".conditions-details");
 bizDetails.addEventListener('submit', (e) => {
     e.preventDefault();
-    let getUserId = localStorage.getItem('credentials');
-    const userId = JSON.parse(getUserId);
     const sendTo = `${baseUrl}/terms-and-conditions/create/`;
     const formData = new FormData(bizDetails);
-    formData.append('permanent', true);
-    formData.append('user_id', userId.id);
+    formData.append('permanent', false);
     const data = Object.fromEntries(formData);
     localStorage.setItem('privacy', data.document_name);
     handleSave(data, sendTo);
@@ -385,20 +382,47 @@ function handleExit() {
 
 // Saving And Pushing User Data To Database
 function handleSave(formObject, endpoint) {
-    fetch(`'${endpoint}'`, {
+    let tokenAccess = JSON.parse(localStorage.getItem('credentials'))
+    const access = tokenAccess.access;
+    console.log(access);
+    fetch(`${endpoint}`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": 'application/json',
+            "Authorization": `Bearer ${access}` 
         },
         body: JSON.stringify(formObject)
-    }).then(res => console.log(res)).then(data => {
-        console.log(data)
+    }).then(res => {
+        return res.json()
+    }).then(data => {
+        localStorage.setItem('doc-id', data.id)
+        console.log(localStorage.getItem('doc-id'));
     }).catch(error => console.log(error));
 }
 
 // Adding Data To Dashboard
-function handleAdd(formObject) {
-
+function handleAdd() {
+    let tokenAccess = JSON.parse(localStorage.getItem('credentials'))
+    const formData = new FormData(bizDetails);
+    formData.append('permanent', true);
+    const access = tokenAccess.access;
+const data = Object.fromEntries(formData);
+    fetch(`https://termsbuddy.herokuapp.com/api/terms-and-conditions/${localStorage.getItem('doc-id')}/update/`, {
+        method: 'PUT',
+        headers: {
+            "Content-Type": 'application/json',
+            "Authorization": `Bearer ${access}`
+        },
+        body: JSON.stringify(data)
+    }).then(res => {
+        if (!res.ok) {
+            throw new Error(res.statusText)
+        }
+        return res.json()
+    }).then(data => {
+        console.log(data);
+        localStorage.removeItem('doc-id')
+    }).catch(error => console.log(error));
 }
 
 // More Options Modal

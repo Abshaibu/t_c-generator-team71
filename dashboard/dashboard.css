@@ -570,6 +570,14 @@ input[type="checkbox"] {
     transition: all 0.25s linear;
 }
 
+.form-error {
+    padding: .4rem;
+    background: #F9C3B4;
+    color: #ED4A1F !important;
+    border-radius: .5rem;
+    font-weight: 600;
+}
+
 .more {
     width: 170px;
     padding: 1rem 2rem;

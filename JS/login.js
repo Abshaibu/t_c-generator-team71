@@ -47,7 +47,7 @@ form.addEventListener('submit', (e) => {
     const data = Object.fromEntries(formData);
     console.log(data);
 
-    fetch('https://termsbuddy.herokuapp.com/api/token/', {
+    fetch('https://termsbuddy.herokuapp.com/api/users/obtain-token/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -68,8 +68,9 @@ form.addEventListener('submit', (e) => {
         return res.json();
     }).then(data => {
         console.log(data)
-        const authToken = data.tokens.refresh;
-        localStorage.setItem('token', authToken);
+        localStorage.setItem('access', JSON.stringify(data.tokens.access));
+        localStorage.setItem('refresh', JSON.stringify(data.tokens.refresh));
+        localStorage.setItem('id', JSON.stringify(data.id));
     }).catch(error => console.log(error));
 
 })
