@@ -15,7 +15,7 @@ form.addEventListener('submit', e => {
 
         let data = {};
         let link = window.location.href;
-        const linkToken = link.slice(39);
+        const linkToken = link.slice(47);
         console.log(linkToken);
         data = {
             password: password.value,
@@ -30,7 +30,7 @@ form.addEventListener('submit', e => {
             body: JSON.stringify(data)
         }).then(res => {
             if (res.status === 200) {
-                window.location.href = 'https://abshaibu.github.io/test-P71/dashboard/dashboard.html';
+                window.location.href = 'https://abshaibu.github.io/test-P71/login.html';
             } else {
                 incorrect.style.display = 'flex';
                 errorText.innerHTML = 'Password must be at least 8 characters long';

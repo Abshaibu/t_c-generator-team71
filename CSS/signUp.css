@@ -65,6 +65,7 @@ input {
     border: 1px solid #BABABA;
     border-radius: 8px;
     background-color: #FEFEFE;
+    font-family: 'Mulish', serif;
 }
 
 input[type='checkbox'] {
