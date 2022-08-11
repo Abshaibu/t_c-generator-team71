@@ -81,16 +81,37 @@
                 <!-- Dashboard Tab -->
                 <div class="tab tab-active" data-id="tab1">
                     <section class="wrapper preview-cons preview">
-                        <div class="terms">
-                            <h2>Terms and Conditions</h2>
-                            <div class="terms-wrapper">
-                                <button class="docu-btn modal1-btn terms-btn">
+                        <div class="dash-pt">
+                            <div class="terms">
+                                <h2>Terms and Conditions</h2>
+                                <div class="terms-wrapper">
+                                    <button class="docu-btn modal1-btn terms-btn">
+                                        <div>
+                                            <img src="plus.svg" alt="plus icon">
+                                        </div>
+                                        <p> <img src="file.svg" alt="file icon">New</p>
+                                    </button>
                                     <div>
-                                        <img src="plus.svg" alt="plus icon">
+                                        <button class="docu-btn docu-primary">
+                                            <div>
+                                                <img src="docu-image.png" alt="an image of a document">
+                                            </div>
+                                            <div>
+                                                <p>
+                                                    <img src="eye.svg" alt="an eye icon">Preview
+                                                </p>
+                                            </div>
+                                        </button>
                                     </div>
-                                    <p> <img src="file.svg" alt="file icon">New</p>
-                                </button>
-                                <div>
+                                </div>
+                            </div>
+                            <div class="privacy">
+                                <h2>Privacy Policy</h2>
+                                <div class="privacy-wrapper terms-wrapper">
+                                    <button class="docu-btn modal2-btn privacy-btn">
+                                        <img src="plus.svg" alt="plus icon">
+                                        <p><img src="policy.svg" alt="file icon">New</p>
+                                    </button>
                                     <button class="docu-btn docu-primary">
                                         <div>
                                             <img src="docu-image.png" alt="an image of a document">
@@ -102,25 +123,6 @@
                                         </div>
                                     </button>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="privacy">
-                            <h2>Privacy Policy</h2>
-                            <div class="privacy-wrapper terms-wrapper">
-                                <button class="docu-btn modal2-btn privacy-btn">
-                                    <img src="plus.svg" alt="plus icon">
-                                    <p><img src="policy.svg" alt="file icon">New</p>
-                                </button>
-                                <button class="docu-btn docu-primary">
-                                    <div>
-                                        <img src="docu-image.png" alt="an image of a document">
-                                    </div>
-                                    <div>
-                                        <p>
-                                            <img src="eye.svg" alt="an eye icon">Preview
-                                        </p>
-                                    </div>
-                                </button>
                             </div>
                         </div>
                     </section>
@@ -482,7 +484,6 @@
                     </div>
                 </div>
             </div>
-
         </main>
     </div>
 
@@ -494,6 +495,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.debug.js"></script>
     <script src="dashboard.js"></script>
+    <script src="main.js"></script>
 
 </body>
 

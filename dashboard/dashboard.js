@@ -8,6 +8,7 @@ const toggler = document.querySelectorAll('.toggler');
 const modalOnes = document.querySelectorAll('.modal1-btn');
 const modalTwos = document.querySelectorAll('.modal2-btn');
 const body = document.querySelector('body');
+const baseUrl = 'https://termsbuddy.herokuapp.com/api';
 
 
 // Sidebar Toggler
@@ -43,16 +44,20 @@ modalTwos.forEach(modal2 => {
     })
 })
 
-
 // Business Conditions Details Form
 const bizDetails = document.querySelector(".conditions-details");
 bizDetails.addEventListener('submit', (e) => {
     e.preventDefault();
-
+    let getUserId = localStorage.getItem('credentials');
+    const userId = JSON.parse(getUserId);
+    const sendTo = `${baseUrl}/terms-and-conditions/create/`;
     const formData = new FormData(bizDetails);
+    formData.append('permanent', true);
+    formData.append('user_id', userId.id);
     const data = Object.fromEntries(formData);
-    localStorage.setItem('priDoc', data.document_name);
-    docDetails = localStorage.getItem('privacy');
+    localStorage.setItem('privacy', data.document_name);
+    handleSave(data, sendTo);
+    console.log(data);
     document.querySelector('.inner-preview').innerHTML = generateTermsTemplate(data);
     modalOne.classList.add('add-progress');
     body.classList.toggle('no-scroll');
@@ -70,9 +75,11 @@ bizDetails.addEventListener('submit', (e) => {
 const priDetails = document.querySelector(".privacy-details");
 priDetails.addEventListener('submit', (e) => {
     e.preventDefault();
+    const sendTo = `${baseUrl}/privacy-policies/create/`;
     const formData = new FormData(priDetails);
     const data = Object.fromEntries(formData);
     localStorage.setItem('privacy', data.document_name);
+    handleSave(data, sendTo);
     document.querySelector('.inner-preview').innerHTML = generatePrivacyTemplate(data);
 
     modalTwo.classList.add('add-progress');
@@ -123,7 +130,7 @@ const preview = `
                     <img src="edit-2.svg" alt="pen icon">
                     Edit
                 </button>
-                <button class="preview-btn preview-save">
+                <button class="preview-btn preview-save" onclick="handleAdd()">
                     <img src="folder-add.svg" alt="folder icon">
                     Save
                 </button>
@@ -140,7 +147,7 @@ const preview = `
                             <img src="download.svg" alt="download icon">
                             Download
                         </button>
-                        <button onclick="handleExport()">
+                        <button class="export" onclick="handleExport()">
                             <img src="export.svg" alt="export icon">
                             Export
                         </button>
@@ -148,10 +155,16 @@ const preview = `
                             <img src="embed.svg" alt="embed icon">
                             Embed
                         </button>
+                        <div class="export-as">
+                        </div>
                     </div>
                 </div>
 
             </div>
+            <button class="preview-btn preview-cls" onclick="handleExit()">
+                <img src="cls.svg" alt="pen icon">
+                Exit
+        </button>
         </div>
     </div>
         `;
@@ -271,7 +284,7 @@ function generateTermsTemplate(data) {
         template += container // appending the agreement content to template
     })
 
-     // display the selected agremment on the page
+    // display the selected agremment on the page
     return template
 }
 
@@ -356,7 +369,7 @@ function generatePrivacyTemplate(data) {
 
     template = sections.intro // setting the default value of templates to intro
 
-    Object.keys(data).slice(2).forEach((key) => {
+    Object.keys(data).slice(5).forEach((key) => {
         let container = `<div>${sections[key]}</div>` // storing each object property in a div
         template += container // appending the agreement content to template
     })
@@ -365,10 +378,35 @@ function generatePrivacyTemplate(data) {
     return template
 }
 
+function handleExit() {
+    document.querySelector('.show-preview').style.transform = 'scale(0)'
+    document.querySelector('.dash-pt').classList.add('scale')
+}
+
+// Saving And Pushing User Data To Database
+function handleSave(formObject, endpoint) {
+    fetch(`'${endpoint}'`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formObject)
+    }).then(res => console.log(res)).then(data => {
+        console.log(data)
+    }).catch(error => console.log(error));
+}
+
+// Adding Data To Dashboard
+function handleAdd(formObject) {
+
+}
+
 // More Options Modal
 function showMore() {
     const moreOptions = document.querySelector('.more');
     moreOptions.classList.toggle('show-more');
+    const showExport = document.querySelector('.export-as');
+    showExport.classList.remove('show-export');
 }
 
 // Downloading Document Created
@@ -378,28 +416,75 @@ const specialElementHandlers = {
     }
 };
 const downloadTemplate = (template) => {
-    console.log(docDetails);
     const doc = new jsPDF();
     doc.fromHTML(template, 20, 20, {
         'width': 170,
         'elementHandlers': specialElementHandlers,
     })
-    doc.save(`${docDetails}.pdf`)
+    doc.save(`${localStorage.getItem('privacy') }.pdf`)
 }
 
 // Downloading Document Created
 function handleDownload() {
     privacyFormData = new FormData(priDetails)
-    privacyObjectData = Object.fromEntries(privacyFormData) 
+    privacyObjectData = Object.fromEntries(privacyFormData)
 
     const finishedTemplate = generatePrivacyTemplate(privacyObjectData)
     downloadTemplate(finishedTemplate)
+    const moreOptions = document.querySelector('.more');
+    moreOptions.classList.toggle('show-more');
 }
 
-// Saving And Pushing User Data To Database
-function handleSave() {
-    privacyFormData = new FormData(priDetails)
-    privacyObjectData = Object.fromEntries(privacyFormData) 
-    console.log(privacyObjectData)
-    saveData(privacyObjectData)
+// Exporting Document Created
+function handleExport() {
+    const showExport = document.querySelector('.export-as');
+    showExport.classList.toggle('show-export');
+    showExport.innerHTML = `<div class="exports">
+                            <p>Export as</p>
+                            <button onclick="docxFormat()">DOCX</button>
+                            <button onclick="txtFormat()">TXT</button>
+                            <button onclick="htmlFormat()">HTML</button>
+                        </div`
+}
+
+// Exporting as DOCX
+function docxFormat() {
+    const showExport = document.querySelector('.export-as');
+    showExport.classList.toggle('show-export');
+}
+
+// Exporting as TXT
+function txtFormat() {
+    const showExport = document.querySelector('.export-as');
+    showExport.classList.toggle('show-export');
+}
+
+// Exporting as HTML
+function htmlFormat() {
+    const showExport = document.querySelector('.export-as');
+    showExport.classList.toggle('show-export');
+}
+
+// Sharing Document Created
+function handleShare() {
+    const showExport = document.querySelector('.export-as');
+    showExport.classList.toggle('show-export');
+    showExport.style.left = '-20.2rem'; 
+    showExport.style.top = '0'; 
+
+    showExport.innerHTML = `<div class="embed-link">
+                                <small>Copy this link to share the document</small>
+                                <button onclick="share()">Document</but>
+                            </div>`;
+}
+
+function share() {
+    const showExport = document.querySelector('.export-as');
+    showExport.classList.toggle('show-export');
+}
+
+// Embeding Document Created
+function handleEmbed() {
+    const showExport = document.querySelector('.export-as');
+    showExport.classList.toggle('show-export');
 }
