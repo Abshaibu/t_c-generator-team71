@@ -54,7 +54,7 @@ form.addEventListener('submit', (e) => {
         },
         body: JSON.stringify(data)
     }).then(res => {
-        if (res.status === 201) {
+        if (res.status === 200) {
             window.location.href = 'https://abshaibu.github.io/test-P71/dashboard/dashboard.html'
         } else {
             incorrect.style.display = 'flex';
