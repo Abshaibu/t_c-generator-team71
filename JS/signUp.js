@@ -52,7 +52,7 @@ form.addEventListener('submit', e => {
             body: JSON.stringify(data)
         }).then(res => {
             if (res.status === 201) {
-                window.location.href = '../dashboard/dashboard.html'
+                window.location.href = 'https://abshaibu.github.io/test-P71/dashboard/dashboard.html'
             } else {
                 incorrect.style.display = 'flex';
                 incorrect.innerHTML = 'Email already exists'
