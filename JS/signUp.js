@@ -52,7 +52,7 @@ form.addEventListener('submit', e => {
             body: JSON.stringify(data)
         }).then(res => {
             if (res.status === 201) {
-                // window.location.href = 'https://abshaibu.github.io/test-P71/dashboard/dashboard.html'
+                window.location.href = '../dashboard/dashboard.html'
             } else {
                 incorrect.style.display = 'flex';
                 incorrect.innerHTML = 'Email already exists'
@@ -65,6 +65,9 @@ form.addEventListener('submit', e => {
             return res.json();
         }).then(data => {
             authToken = {
+                firstName: data.first_name,
+                lastName: data.last_name,
+                email: data.email,
                 refresh: data.tokens.refresh,
                 access: data.tokens.access,
                 id: data.id

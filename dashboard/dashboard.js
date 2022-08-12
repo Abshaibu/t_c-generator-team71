@@ -5,11 +5,12 @@ const openModal = document.querySelector('.modal-wrapper');
 const modalOne = document.querySelector('.modal1');
 const modalTwo = document.querySelector('.modal2');
 const toggler = document.querySelectorAll('.toggler');
-const modalOnes = document.querySelectorAll('.modal1-btn');
-const modalTwos = document.querySelectorAll('.modal2-btn');
+const modalOnes = document.querySelector('.modal1-btn');
+const modalTwos = document.querySelector('.modal2-btn');
 const body = document.querySelector('body');
+const previewWrapper = document.querySelector('.preview');
 const baseUrl = 'https://termsbuddy.herokuapp.com/api';
-
+const form = document.querySelector('form');
 
 // Sidebar Toggler
 expander.addEventListener('click', () => {
@@ -24,25 +25,38 @@ toggler.forEach(toggle => {
     })
 })
 
-// New Terms Modal
-modalOnes.forEach(modal => {
-    modal.addEventListener('click', (e) => {
+// Toggle Document Form Modal
+modalOnes.addEventListener('click', () => {
         modalOne.classList.toggle('modal');
         body.classList.toggle('no-scroll');
-        openModal.classList.remove('changes');
-        modalTwo.classList.remove('changes');
-    })
+        modalTwo.classList.toggle('changes');
+    openModal.classList.toggle('changes');
+    previewWrapper.innerHTML = mainContent;
+})
+    
+modalTwos.addEventListener('click', () => {
+    modalTwo.classList.remove('modal');
+    body.classList.toggle('no-scroll');
+    modalTwo.classList.toggle('changes');
+    openModal.classList.toggle('changes');
+    previewWrapper.innerHTML = mainContent;
+
 })
 
+// New Terms Modal
+function termModal() { 
+    modalOne.classList.toggle('modal');
+    body.classList.toggle('no-scroll');
+    openModal.classList.remove('changes');
+    modalTwo.classList.remove('changes');
+}
 
 // New Policy Modal
-modalTwos.forEach(modal2 => {
-    modal2.addEventListener('click', (e) => {
-        modalTwo.classList.toggle('modal');
-        modalTwo.classList.remove('changes');
-        body.classList.toggle('no-scroll');
-    })
-})
+function privacyModal() { 
+    modalTwo.classList.toggle('modal');
+    modalTwo.classList.remove('changes');
+    body.classList.toggle('no-scroll');
+}
 
 // Business Conditions Details Form
 const bizDetails = document.querySelector(".conditions-details");
@@ -59,6 +73,10 @@ bizDetails.addEventListener('submit', (e) => {
     modalOne.classList.add('add-progress');
     body.classList.toggle('no-scroll');
     document.querySelector('.heading').innerHTML = 'Preview';
+    if (openModal.classList.contains('modal1')) {
+        document.querySelector('.add-two').style.display = 'none';
+        document.querySelector('.add-one').style.display = 'block';
+    }
 
     setTimeout(() => {
         modalOne.classList.toggle('modal');
@@ -74,6 +92,7 @@ priDetails.addEventListener('submit', (e) => {
     e.preventDefault();
     const sendTo = `${baseUrl}/privacy-policies/create/`;
     const formData = new FormData(priDetails);
+    formData.append('permanent', false);
     const data = Object.fromEntries(formData);
     localStorage.setItem('privacy', data.document_name);
     handleSave(data, sendTo);
@@ -82,6 +101,10 @@ priDetails.addEventListener('submit', (e) => {
     modalTwo.classList.add('add-progress');
     body.classList.toggle('no-scroll');
     document.querySelector('.heading').innerHTML = 'Preview';
+    if (!openModal.classList.contains('modal2')) {
+        document.querySelector('.add-one').style.display = 'none';
+        document.querySelector('.add-two').style.display = 'block';
+    }
 
     setTimeout(() => {
         modalTwo.classList.toggle('modal');
@@ -94,13 +117,11 @@ priDetails.addEventListener('submit', (e) => {
 const switchForms = document.querySelectorAll('.switch-form');
 switchForms.forEach(swap => {
     swap.addEventListener('click', () => {
-        openModal.classList.toggle('changes');
-        openModal.classList.remove('add-progress');
-        modalTwo.classList.toggle('changes');
-        modalTwo.classList.remove('add-progress');
-        document.querySelectorAll('.preview').forEach(view => {
-            view.innerHTML = preview;
-        })
+            openModal.classList.toggle('changes');
+            openModal.classList.remove('add-progress');
+            modalTwo.classList.toggle('changes');
+            modalTwo.classList.remove('add-progress');
+                previewWrapper.innerHTML = preview;
     })
 })
 
@@ -114,6 +135,56 @@ $(document).ready(function () {
     });
 });
 
+// Main Dashboard Content
+const mainContent = `
+<div class="dash-pt">
+                            <div class="terms">
+                                <h2>Terms and Conditions</h2>
+                                <div class="terms-wrapper">
+                                    <button class="docu-btn modal1-btn terms-btn" onclick="termModal()">
+                                        <div>
+                                            <img src="plus.svg" alt="plus icon">
+                                        </div>
+                                        <p> <img src="file.svg" alt="file icon">New</p>
+                                    </button>
+                                    <div>
+                                        <button class="docu-btn docu-primary">
+                                            <div>
+                                                <img src="docu-image.png" alt="an image of a document">
+                                            </div>
+                                            <div>
+                                                <p>
+                                                    <img src="eye.svg" alt="an eye icon">Preview
+                                                </p>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="privacy">
+                                <h2>Privacy Policy</h2>
+                                <div class="privacy-wrapper terms-wrapper">
+                                    <button class="docu-btn modal2-btn privacy-btn" onclick="privacyModal()">
+                                        <img src="plus.svg" alt="plus icon">
+                                        <p><img src="policy.svg" alt="file icon">New</p>
+                                    </button>
+                                    <button class="docu-btn docu-primary">
+                                        <div>
+                                            <img src="docu-image.png" alt="an image of a document">
+                                        </div>
+                                        <div>
+                                            <p>
+                                                <img src="eye.svg" alt="an eye icon">Preview
+                                            </p>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+`;
+// Default dashboard view
+previewWrapper.innerHTML = mainContent;
+
 // Preview Template
 const preview = `
        <div class="show-preview">
@@ -123,11 +194,11 @@ const preview = `
 
             </div>
             <div class="preview-ctas">
-                <button class="preview-btn preview-edit">
-                    <img src="edit-2.svg" alt="pen icon">
-                    Edit
+                <button class="preview-btn preview-save add-one" onclick="handleAdd()">
+                    <img src="folder-add.svg" alt="folder icon">
+                    Save
                 </button>
-                <button class="preview-btn preview-save" onclick="handleAdd()">
+                <button class="preview-btn preview-save add-two" onclick="handleAddTwo()">
                     <img src="folder-add.svg" alt="folder icon">
                     Save
                 </button>
@@ -171,7 +242,7 @@ function generateTermsTemplate(data) {
     // storing the agreement content in an object
     const sections = {
         'intro': `
-            <h1>Privacy Policy for ${data.business_name}</h1>
+            <h1>Terms and conditions for ${data.business_name}</h1>
 
             <p>At ${data.business_name}, accessible from ${`<a href="${data.business_url}">${data.business_url}</a>`}, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by ${data.business_url} and how we use it.</p>
 
@@ -376,15 +447,15 @@ function generatePrivacyTemplate(data) {
 }
 
 function handleExit() {
-    document.querySelector('.show-preview').style.transform = 'scale(0)'
-    document.querySelector('.dash-pt').classList.add('scale')
+    previewWrapper.innerHTML = mainContent;
+    priDetails.reset();
+    bizDetails.reset();
 }
 
 // Saving And Pushing User Data To Database
+let tokenAccess = JSON.parse(localStorage.getItem('credentials'))
 function handleSave(formObject, endpoint) {
-    let tokenAccess = JSON.parse(localStorage.getItem('credentials'))
     const access = tokenAccess.access;
-    console.log(access);
     fetch(`${endpoint}`, {
         method: 'POST',
         headers: {
@@ -396,7 +467,6 @@ function handleSave(formObject, endpoint) {
         return res.json()
     }).then(data => {
         localStorage.setItem('doc-id', data.id)
-        console.log(localStorage.getItem('doc-id'));
     }).catch(error => console.log(error));
 }
 
@@ -421,6 +491,32 @@ const data = Object.fromEntries(formData);
         return res.json()
     }).then(data => {
         console.log(data);
+        previewWrapper.innerHTML = mainContent;
+        localStorage.removeItem('doc-id')
+    }).catch(error => console.log(error));
+}
+
+function handleAddTwo() {
+    let tokenAccess = JSON.parse(localStorage.getItem('credentials'))
+    const formData = new FormData(priDetails);
+    formData.append('permanent', true);
+    const access = tokenAccess.access;
+    const data = Object.fromEntries(formData);
+    fetch(`https://termsbuddy.herokuapp.com/api/privacy-policies/${localStorage.getItem('doc-id')}/update/`, {
+        method: 'PUT',
+        headers: {
+            "Content-Type": 'application/json',
+            "Authorization": `Bearer ${access}`
+        },
+        body: JSON.stringify(data)
+    }).then(res => {
+        if (!res.ok) {
+            throw new Error(res.statusText)
+        }
+        return res.json()
+    }).then(data => {
+        console.log(data);
+        previewWrapper.innerHTML = mainContent;
         localStorage.removeItem('doc-id')
     }).catch(error => console.log(error));
 }
@@ -511,4 +607,32 @@ function share() {
 function handleEmbed() {
     const showExport = document.querySelector('.export-as');
     showExport.classList.toggle('show-export');
+}
+
+const access = tokenAccess;
+const x = access.firstName;
+const y = access.lastName;
+document.querySelector('.num-figure').innerHTML = `${access.email}`;
+document.querySelector('.name').innerHTML = `${x} ${y}`;
+document.querySelectorAll('.initials').forEach(initial => {
+    initial.innerHTML = `${x[0]}${y[0]}`;
+})
+
+// Displaying Documents user has created
+function handleDisplay() {
+    fetch(`${baseUrl}/users/${res.id}/documents`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${res.access}`
+        }
+    }).then(res => {
+        return res.json()
+    }).then(data => {
+        console.log(data);
+        const docList = document.querySelector('.doc-list');
+        data.forEach(doc => {
+            docList.innerHTML += `<li>${doc.title}</li>`;
+        }
+        )
+    }).catch(error => console.log(error));
 }

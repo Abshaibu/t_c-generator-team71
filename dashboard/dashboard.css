@@ -291,7 +291,7 @@ main {
     align-items: center;
     width: 100%;
     height: 100%;
-    padding-top: 9rem;
+    padding-top: 15rem;
 }
 
 .modal-form-wrapper {
@@ -497,6 +497,14 @@ input[type="checkbox"] {
     margin: -8px 10px 0 0;
 }
 
+.required {
+    background: #F9C3B4;
+    color: #ED4A1F !important;
+    border-radius: .5rem;
+    padding: .5rem;
+    margin: 0 !important;
+}
+
 /* Preview Section */
 .preview-wrapper {
     max-width: 1032px;
@@ -538,10 +546,6 @@ input[type="checkbox"] {
     padding-right: .5rem;
 }
 
-.preview-edit {
-    color: #2B7A78;
-}
-
 .preview-save {
     background: #2B7A78;
 }
@@ -563,19 +567,6 @@ input[type="checkbox"] {
 .dashboard .terms,
 .dashboard .privacy {
     display: none;
-}
-
-.scale {
-    transform: scale(1);
-    transition: all 0.25s linear;
-}
-
-.form-error {
-    padding: .4rem;
-    background: #F9C3B4;
-    color: #ED4A1F !important;
-    border-radius: .5rem;
-    font-weight: 600;
 }
 
 .more {

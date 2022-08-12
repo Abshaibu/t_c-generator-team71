@@ -55,7 +55,7 @@ form.addEventListener('submit', (e) => {
         body: JSON.stringify(data)
     }).then(res => {
         if (res.status === 200) {
-            window.location.href = 'https://abshaibu.github.io/test-P71/dashboard/dashboard.html'
+            window.location.href = '../dashboard/dashboard.html'
         } else {
             incorrect.style.display = 'flex';
             incorrectText.innerHTML = 'Incorrect email or password';
@@ -68,10 +68,27 @@ form.addEventListener('submit', (e) => {
         return res.json();
     }).then(data => {
         console.log(data)
-        localStorage.setItem('access', JSON.stringify(data.tokens.access));
-        localStorage.setItem('refresh', JSON.stringify(data.tokens.refresh));
-        localStorage.setItem('id', JSON.stringify(data.id));
+        authToken = {
+            refresh: data.tokens.refresh,
+            access: data.tokens.access,
+            id: data.id
+        }
+        localStorage.setItem('credentials', JSON.stringify(authToken));
+        return authToken;
     }).catch(error => console.log(error));
 
 })
 
+
+// const formData = new FormData(form);
+// const data = Object.fromEntries(formData);
+// console.log(data);
+
+// fetch('https://termsbuddy.herokuapp.com/api/users/newsletter/', {
+//     method: 'POST',
+//     headers: {
+//         'Content-Type': 'application/json'
+//     },
+//     body: JSON.stringify(data)
+// }).then(res => { console.log(res);
+// }).then(data => {console.log(data)}).catch(error => console.log(error));

@@ -74,57 +74,13 @@
                     <p>Welcome <span class="firstname">!</span></p>
                 </div>
                 <div class="profile-img">
-                    <p>SA</p>
+                    <p class="initials">SA</p>
                 </div>
             </div>
             <div class="tab-content">
                 <!-- Dashboard Tab -->
                 <div class="tab tab-active" data-id="tab1">
                     <section class="wrapper preview-cons preview">
-                        <div class="dash-pt">
-                            <div class="terms">
-                                <h2>Terms and Conditions</h2>
-                                <div class="terms-wrapper">
-                                    <button class="docu-btn modal1-btn terms-btn">
-                                        <div>
-                                            <img src="plus.svg" alt="plus icon">
-                                        </div>
-                                        <p> <img src="file.svg" alt="file icon">New</p>
-                                    </button>
-                                    <div>
-                                        <button class="docu-btn docu-primary">
-                                            <div>
-                                                <img src="docu-image.png" alt="an image of a document">
-                                            </div>
-                                            <div>
-                                                <p>
-                                                    <img src="eye.svg" alt="an eye icon">Preview
-                                                </p>
-                                            </div>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="privacy">
-                                <h2>Privacy Policy</h2>
-                                <div class="privacy-wrapper terms-wrapper">
-                                    <button class="docu-btn modal2-btn privacy-btn">
-                                        <img src="plus.svg" alt="plus icon">
-                                        <p><img src="policy.svg" alt="file icon">New</p>
-                                    </button>
-                                    <button class="docu-btn docu-primary">
-                                        <div>
-                                            <img src="docu-image.png" alt="an image of a document">
-                                        </div>
-                                        <div>
-                                            <p>
-                                                <img src="eye.svg" alt="an eye icon">Preview
-                                            </p>
-                                        </div>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
                     </section>
                 </div>
 
@@ -150,12 +106,6 @@
                         <div class="privacy">
                             <h2>Terms and Conditions</h2>
                             <div class="privacy-wrapper terms-wrapper">
-                                <button class="docu-btn modal1-btn terms-btn">
-                                    <div>
-                                        <img src="plus.svg" alt="plus icon">
-                                    </div>
-                                    <p> <img src="file.svg" alt="file icon">New</p>
-                                </button>
                                 <button class="docu-btn docu-primary">
                                     <div>
                                         <img src="docu-image.png" alt="an image of a document">
@@ -194,12 +144,6 @@
                         <div class="privacy">
                             <h2>Privacy Policy</h2>
                             <div class="privacy-wrapper terms-wrapper">
-                                <button class="docu-btn modal2-btn privacy-btn">
-                                    <div>
-                                        <img src="plus.svg" alt="plus icon">
-                                    </div>
-                                    <p> <img src="policy.svg" alt="file icon">New</p>
-                                </button>
                                 <button class="docu-btn docu-primary">
                                     <div>
                                         <img src="docu-image.png" alt="an image of a document">
@@ -224,13 +168,9 @@
                             <div class="avatar white shadow">
                                 <div class="first avatar_alt">
                                     <div class="profile-img">
-                                        <p>SA</p>
+                                        <p class="initials">SA</p>
                                     </div>
                                     <span class="name alt alt_alt">Ashley Cole</span>
-                                </div>
-                                <div class="second avatar_alt">
-                                    <span class="num-text alt">Phone Number</span>
-                                    <span class="num-figure">+44 7123456789</span>
                                 </div>
                                 <div class="third avatar_alt avatar_alt_alt">
                                     <span class="num-text  alt">Email</span>
@@ -293,39 +233,45 @@
                         </div>
                         <form action="" class="conditions-details">
                             <div class="terms-details">
-                                <p class="form-error">No field should be empty</p>
+                                <small class="required">All input fields are required</small>
                                 <div>
                                     <label for="bizname">Business Name
                                         <img src="shop.svg" alt="shop icon">
                                     </label>
-                                    <input type="text" name="business_name" id="bizname" placeholder="John Doe Limited">
+                                    <input type="text" name="business_name" id="bizname" placeholder="John Doe Limited"
+                                        required>
                                 </div>
                                 <div>
                                     <label for="url">Website URL
                                         <img src="global.svg" alt="globe icon">
                                     </label>
-                                    <input type="text" name="business_url" id="url" placeholder="www.johndoe.com">
+                                    <input type="text" name="business_url" id="url" placeholder="https://johndoe.com" required>
+                                    <small>URL format must be https://johndoe.com</small>
                                 </div>
                                 <div>
                                     <label for="email">Email
                                         <img src="input-email.svg" alt="envelope icon">
                                     </label>
-                                    <input type="email" name="contact_email" id="email" placeholder="johndoe@gmail.com">
+                                    <input type="email" name="contact_email" id="email" placeholder="johndoe@gmail.com"
+                                        required>
                                 </div>
                                 <div>
                                     <label for="phone">Phone
                                         <img src="call.svg" alt="phone icon">
                                     </label>
-                                    <input type="text" name="contact_phone" id="phone" placeholder="+234 812 657 9745">
+                                    <input type="text" name="contact_phone" id="phone" placeholder="+234 812 657 9745"
+                                        required>
+                                        <small>phone format must be +234 XXX XXX XXXX</small>
                                 </div>
                             </div>
                             <div class="terms-features">
+                                <small class="required">All input fields are required</small>
                                 <div id="docu-name">
                                     <label for="docname">Document Name
                                         <img src="grey-file.svg" alt="shop icon">
                                     </label>
                                     <input type="text" name="document_name" id="docname"
-                                        placeholder="Awesome name goes here">
+                                        placeholder="Awesome name goes here" required>
                                 </div>
                                 <div>
                                     <input type="checkbox" name="cookies" id="cookies">
@@ -358,7 +304,7 @@
                                         alt="right arrow icon">
                                     Back
                                 </button>
-                                <button type="button" class="proceed switch-form" onclick="validateInfo()">
+                                <button type="button" class="proceed switch-form te-btn">
                                     Proceed
                                     <img src="arrow-circle-right.svg" alt="right arrow icon">
                                 </button>
@@ -396,42 +342,46 @@
                         </div>
                         <form action="" class="privacy-details">
                             <div class="terms-details">
-                                <p class="form-error">No field should be empty</p>
+                                <small class="required">All input fields are required</small>
                                 <div>
                                     <label for="mbizname">Business Name
                                         <img src="shop.svg" alt="shop icon">
                                     </label>
                                     <input type="text" name="business_name" id="mbizname"
-                                        placeholder="John Doe Limited">
+                                        placeholder="John Doe Limited" required>
                                 </div>
                                 <div>
                                     <label for="murl">Website URL
                                         <img src="global.svg" alt="globe icon">
                                     </label>
-                                    <input type="text" name="business_url" id="murl" placeholder="www.johndoe.com">
+                                    <input type="text" name="business_url" id="murl" placeholder="https://johndoe.com"
+                                        required>
+                                        <small>URL format must be https://johndoe.com</small>
                                 </div>
                                 <div>
                                     <label for="memail">Email
                                         <img src="input-email.svg" alt="envelope icon">
                                     </label>
                                     <input type="email" name="contact_email" id="memail"
-                                        placeholder="johndoe@gmail.com">
+                                        placeholder="johndoe@gmail.com" required>
                                 </div>
                                 <div>
                                     <label for="mphone">Phone
                                         <img src="call.svg" alt="phone icon">
                                     </label>
-                                    <input type="text" name="contact_phone" id="mphone" placeholder="+234 812 657 9745">
+                                    <input type="text" name="contact_phone" id="mphone" placeholder="+234 812 657 9745"
+                                        required>
+                                        <small>phone format must be +234 XXX XXX XXXX</small>
                                 </div>
                             </div>
                             <div class="terms-features">
-                                
+                                <small class="required">All input fields are required</small>
                                 <div id="docu-name">
                                     <label for="docname">Document Name
                                         <img src="grey-file.svg" alt="shop icon">
                                     </label>
                                     <input type="text" name="document_name" id="mdocname"
-                                        placeholder="Awesome name goes here">
+                                        placeholder="Awesome name goes here" required>
                                 </div>
                                 <div>
                                     <input type="checkbox" name="consent" id="mconsent">
@@ -474,7 +424,7 @@
                                         alt="right arrow icon">
                                     Back
                                 </button>
-                                <button type="button" class="proceed switch-form" onclick="validateInfo()">
+                                <button type="button" class="proceed switch-form pr-btn">
                                     Proceed
                                     <img src="arrow-circle-right.svg" alt="right arrow icon">
                                 </button>
@@ -498,7 +448,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.debug.js"></script>
     <script src="dashboard.js"></script>
-    <script src="main.js"></script>
 
 </body>
 
