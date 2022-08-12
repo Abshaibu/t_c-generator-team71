@@ -636,3 +636,9 @@ function handleDisplay() {
         )
     }).catch(error => console.log(error));
 }
+
+// LogOut
+function logOut() {
+    localStorage.removeItem('credentials');
+    window.location.href = 'https://abshaibu.github.io/test-P71/login.html';
+}
