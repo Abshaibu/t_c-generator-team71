@@ -65,13 +65,13 @@ form.addEventListener('submit', e => {
             return res.json();
         }).then(data => {
             authToken = {
-                firstName: data.first_name,
-                lastName: data.last_name,
-                email: data.email,
                 refresh: data.tokens.refresh,
                 access: data.tokens.access,
                 id: data.id
             }
+            localStorage.setItem('fname', data.first_name)
+            localStorage.setItem('lname', data.last_name)
+            localStorage.setItem('email', data.email)
             localStorage.setItem('credentials', JSON.stringify(authToken));
             return authToken;
         }).catch(error => console.log(error));

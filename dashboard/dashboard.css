@@ -217,7 +217,9 @@ main {
     color: #FEFEFE;
 }
 
-.terms-wrapper {
+.drafts,
+.terms-wrapper,
+.privacy-wrapper {
     display: flex;
     gap: 1.56rem;
     align-items: center;
@@ -332,6 +334,13 @@ main {
 .modal-form-wrapper button {
     padding: 0;
     border: none;
+}
+
+.inner-doc .show-preview {
+    max-width: 800px;
+    width: 90%;
+    margin: 0 auto;
+
 }
 
 .modal-form-wrapper p {
@@ -648,6 +657,40 @@ input[type="checkbox"] {
     font-size: 1.2rem;
 }
 
+.doc-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: scale(0);
+    transition: all 0.3s linear;
+    overflow: auto;
+}
+
+.show-doc {
+    transform: scale(1);
+    z-index: 9999999;
+}
+
+.inner-doc {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    z-index: 9999999999;
+    height: 100%;
+    padding-top: 15rem;
+    background: #F5F5F5;
+    padding: 2rem;
+}
+
 /* Profile Tab */
 .profile-wrapper {
     display: flex;
@@ -807,7 +850,9 @@ input[type="checkbox"] {
         display: none;
     }
 
-    .terms-wrapper {
+    .drafts,
+    .terms-wrapper,
+    .privacy-wrapper {
         gap: 1.3rem;
     }
 
