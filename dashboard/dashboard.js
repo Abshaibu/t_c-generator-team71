@@ -13,13 +13,13 @@ const baseUrl = 'https://termsbuddy.herokuapp.com/api';
 const forms = document.querySelectorAll('form');
 let termsObj = {};
 let privacyObj = {};
+let downloadObj;
 let singlePrivacyObj = {};
 let singleTermsObj = {};
 
 
 const wrapper = document.querySelector(".wrapper");
 wrapper.addEventListener('click', (e) => {
-    console.log(e.target.classList);
     const id = e.target.getAttribute('data-id')
     const docName = e.target.getAttribute('data-bar')
     if (e.target.id === 'download') {
@@ -48,9 +48,14 @@ previewCons.addEventListener('click', (e) => {
     if (e.target.classList.contains('docu-prim')) {
         const id = e.target.getAttribute('data-id')
         const docName = e.target.getAttribute('data-bar')
-        console.log(docName, "eventlistener");
-        console.log(id);
         openPreview(id, docName);
+    }
+})
+
+const docWrapper = document.querySelector('.doc-wrapper');
+docWrapper.addEventListener('click', (e) => { 
+    if (e.target.id === 'download') {
+        handleDownload(downloadObj)
     }
 })
 
@@ -74,6 +79,7 @@ modalOnes.addEventListener('click', () => {
     modalTwo.classList.toggle('changes');
     openModal.classList.toggle('changes');
     previewWrapper.innerHTML = mainContent;
+    location.reload();
 })
 
 modalTwos.addEventListener('click', () => {
@@ -82,6 +88,7 @@ modalTwos.addEventListener('click', () => {
     modalTwo.classList.toggle('changes');
     openModal.classList.toggle('changes');
     previewWrapper.innerHTML = mainContent;
+    location.reload();
 
 })
 
@@ -109,7 +116,6 @@ bizDetails.addEventListener('submit', (e) => {
     // formData.append('permanent', false);
     let data = Object.fromEntries(formData);
     data.permanent = false
-    console.log(data)
     termsObj = data;
     termsObj.name = 'terms';
     document.querySelector('.inner-preview').innerHTML = generateTermsTemplate(data);
@@ -243,8 +249,7 @@ const previewAfter = `
        <div class="show-preview">
         <h1 class="preview-heading">Preview of your document</h1>
         <div class="preview-wrapper">
-            <div class="inner-preview open-preview">
-                
+            <div class="inner-preview open-preview">     
             </div>
             <div class="preview-ctas">
                 <div>
@@ -515,7 +520,6 @@ function handleSave(formObject, endpoint, doc) {
         // }
         return res.json()
     }).then(data => {
-        console.log(data);
         localStorage.setItem('doc-id', data.id)
         doc === "terms" ? postTermsSave() : postPrivacySave()
     })
@@ -545,7 +549,6 @@ function handleAdd() {
         }
         return res.json()
     }).then(data => {
-        console.log(data);
         previewWrapper.innerHTML = mainContent;
         localStorage.removeItem('doc-id')
         location.reload();
@@ -571,7 +574,6 @@ function handleAddTwo() {
         }
         return res.json()
     }).then(data => {
-        console.log(data);
         previewWrapper.innerHTML = mainContent;
         localStorage.removeItem('doc-id')
         location.reload();
@@ -626,12 +628,51 @@ function handleExport() {
 function docxFormat() {
     const showExport = document.querySelector('.export-as');
     showExport.classList.toggle('show-export');
+
+    // getting the inner-preview container and add an id attribute to it
+    let innerPreview = document.querySelector('.inner-preview');
+    innerPreview.setAttribute('id', 'preview-container')
+
+    // constructing the source data with the header, body and footer tags
+    let header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
+        "xmlns:w='urn:schemas-microsoft-com:office:word' " +
+        "xmlns='http://www.w3.org/TR/REC-html40'>" +
+        "<head><meta charset='utf-8'><title>Export HTML to Word Document with JavaScript</title></head><body>";
+    let footer = "</body></html>";
+    let previewContainer = header + document.getElementById('preview-container').innerHTML + footer;
+
+    // encoding previewContainer to form a URL
+    let source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(previewContainer);
+
+    // creating a download link
+    let anchorElement = document.createElement('a');
+    document.body.appendChild(anchorElement);
+    anchorElement.href = source;
+    anchorElement.download = 'Document.doc';
+    anchorElement.click();
+    document.body.removeChild(anchorElement);
 }
 
 // Exporting as TXT
 function txtFormat() {
     const showExport = document.querySelector('.export-as');
     showExport.classList.toggle('show-export');
+
+        // create an empty array that will contain the content in inner-preview
+        let arrayOfInnerPreviewContent = []
+        // storing the text of inner preview in a variable
+        let innerPreviewContent = document.querySelector('.inner-preview').innerText
+        // pushing the content previewed to the array
+        arrayOfInnerPreviewContent.push(innerPreviewContent)
+        //  converting the array to a string
+        let arrayToString = arrayOfInnerPreviewContent.toString()
+        // converting the content to a text file
+        let file = new Blob([arrayToString], { type: 'text' })
+        // creating a link to download the text file
+        let anchorTag = document.createElement('a')
+        anchorTag.href = URL.createObjectURL(file)
+        anchorTag.download = 'Document.txt'  // name of file to be changed
+        anchorTag.click()
 }
 
 // Exporting as HTML
@@ -662,6 +703,9 @@ function share() {
 function handleEmbed() {
     const showExport = document.querySelector('.export-as');
     showExport.classList.toggle('show-export');
+    showExport.classList.toggle('show-embed');
+    showExport.innerHTML = `<textarea>${oPreview}
+    </textarea>`
 }
 
 // Previewing Generated and Saved Document
@@ -686,8 +730,14 @@ function logOut() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-    handleGetUser();
-    handleDisplay();
+    const tokenAccess = JSON.parse(localStorage.getItem('credentials'))
+    if (tokenAccess) {
+        // location.reload();
+        handleDisplay();
+        handleGetUser();
+    } else {
+        window.location.href = 'https://abshaibu.github.io/test-P71/login.html';
+    }
 })
 
 // Get user details
@@ -732,7 +782,6 @@ function handleDisplay() {
         privacyDocs.forEach(pd => {
             pd.name = "privacy"
             oPreview = generatePrivacyTemplate(pd);
-            console.log(oPreview);
             pWrapper.forEach(wrapper => {
                 wrapper.innerHTML += renderDocuments(pd);
             })
@@ -772,7 +821,6 @@ const renderDocuments = (document) => {
 
 // Previewing Individual Document
 function openPreview(docId, docName) {
-    console.log(docName, "openPreview")
     const docType = (docName === "terms") ? "terms-and-conditions" : "privacy-policies";
     document.querySelector('.doc-wrapper').classList.toggle('show-doc');
     document.querySelector('.inner-doc').innerHTML = previewAfter;
@@ -785,9 +833,23 @@ function openPreview(docId, docName) {
 
         return res.json()
     }).then(data => {
+        let mutateData = data;
+        delete mutateData.permanent;
+        delete mutateData.user_id;
+        delete mutateData.id;
+        delete mutateData.additional_text;
+        delete mutateData.create_date;
+        delete mutateData.last_edit;
+        if (docName === "terms") {
+            termsObj = mutateData
+            downloadObj = termsObj
+            downloadObj.name = "terms"
+        } else {
+            privacyObj = mutateData
+            downloadObj = privacyObj
+        }
 
-        document.querySelector('.inner-preview').innerHTML = docName === "terms" ? generateTermsTemplate(data) : generatePrivacyTemplate(data);
-        console.log(data)
+        document.querySelector('.inner-preview').innerHTML = docName === "terms" ? generateTermsTemplate(mutateData) : generatePrivacyTemplate(mutateData);
     })
 }
 
@@ -801,7 +863,6 @@ function deleteDoc(id, docCate) {
         return res.status;
     }).then(data => {
         location.reload();
-        console.log(data)
     }).catch(error => console.log(error));
 }
 

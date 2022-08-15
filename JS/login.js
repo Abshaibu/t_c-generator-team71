@@ -56,8 +56,8 @@ form.addEventListener('submit', (e) => {
         body: JSON.stringify(data)
     }).then(res => {
         if (res.status === 201) {
-            window.location.href = 'https://abshaibu.github.io/test-P71/dashboard/dashboard.html'
-            // window.location.href = 'https://127.0.0.1:5500/dashboard/dashboard.html'
+            // window.location.href = 'https://abshaibu.github.io/test-P71/dashboard/dashboard.html'
+            window.location.href = 'https://127.0.0.1:5500/dashboard/dashboard.html'
         } else {
             incorrect.style.display = 'flex';
             incorrectText.innerHTML = 'Incorrect email or password';
