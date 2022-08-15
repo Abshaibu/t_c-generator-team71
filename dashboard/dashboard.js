@@ -10,7 +10,49 @@ const modalTwos = document.querySelector('.modal2-btn');
 const body = document.querySelector('body');
 const previewWrapper = document.querySelector('.preview');
 const baseUrl = 'https://termsbuddy.herokuapp.com/api';
-const form = document.querySelector('form');
+const forms = document.querySelectorAll('form');
+let termsObj = {};
+let privacyObj = {};
+let singlePrivacyObj = {};
+let singleTermsObj = {};
+
+
+const wrapper = document.querySelector(".wrapper");
+wrapper.addEventListener('click', (e) => {
+    console.log(e.target.classList);
+    const id = e.target.getAttribute('data-id')
+    const docName = e.target.getAttribute('data-bar')
+    if (e.target.id === 'download') {
+        if (e.target.closest('.terms-c')) {
+            handleDownload(termsObj)
+        } else if (e.target.closest('.privacy-p')) {
+            handleDownload(privacyObj)
+        }
+    }
+    if (e.target.classList.contains('delete')) {
+        const docId = e.target.getAttribute('data-id');
+        const cate = e.target.getAttribute('data-category')
+        let category;
+        if (cate === 'terms') {
+            category = 'terms-and-conditions';
+            deleteDoc(docId, category)
+        } else if (cate === 'privacy') {
+            category = 'privacy-policies';
+            deleteDoc(docId, category)
+        }
+    }
+
+})
+const previewCons = document.querySelector(".preview-cons");
+previewCons.addEventListener('click', (e) => {
+    if (e.target.classList.contains('docu-prim')) {
+        const id = e.target.getAttribute('data-id')
+        const docName = e.target.getAttribute('data-bar')
+        console.log(docName, "eventlistener");
+        console.log(id);
+        openPreview(id, docName);
+    }
+})
 
 // Sidebar Toggler
 expander.addEventListener('click', () => {
@@ -64,25 +106,16 @@ bizDetails.addEventListener('submit', (e) => {
     e.preventDefault();
     const sendTo = `${baseUrl}/terms-and-conditions/create/`;
     const formData = new FormData(bizDetails);
-    formData.append('permanent', false);
-    const data = Object.fromEntries(formData);
-    console.log(data);
+    // formData.append('permanent', false);
+    let data = Object.fromEntries(formData);
+    data.permanent = false
+    console.log(data)
+    termsObj = data;
+    termsObj.name = 'terms';
     document.querySelector('.inner-preview').innerHTML = generateTermsTemplate(data);
-    handleSave(data, sendTo);
-    modalOne.classList.add('add-progress');
-    body.classList.toggle('no-scroll');
-    document.querySelector('.heading').innerHTML = 'Preview';
-    if (openModal.classList.contains('modal1')) {
-        document.querySelector('.add-two').style.display = 'none';
-        document.querySelector('.add-one').style.display = 'block';
-    }
-
-    setTimeout(() => {
-        modalOne.classList.toggle('modal');
-        modalOne.classList.remove('changes');
-        modalOne.classList.remove('add-progress');
-        modalTwo.classList.remove('changes');
-    }, 300);
+    document.querySelector('.preview-ctas').classList.add('terms-c');
+    const doc = "terms"
+    handleSave(data, sendTo, doc)
 })
 
 // Business Privacy Details Form
@@ -91,24 +124,15 @@ priDetails.addEventListener('submit', (e) => {
     e.preventDefault();
     const sendTo = `${baseUrl}/privacy-policies/create/`;
     const formData = new FormData(priDetails);
-    formData.append('permanent', false);
-    const data = Object.fromEntries(formData);
+    // formData.append('permanent', false);
+    let data = Object.fromEntries(formData);
+    data.permanent = false
+    privacyObj = data;
+    privacyObj.name = 'privacy';
     document.querySelector('.inner-preview').innerHTML = generatePrivacyTemplate(data);
-    handleSave(data, sendTo);
-
-    modalTwo.classList.add('add-progress');
-    body.classList.toggle('no-scroll');
-    document.querySelector('.heading').innerHTML = 'Preview';
-    if (!openModal.classList.contains('modal2')) {
-        document.querySelector('.add-one').style.display = 'none';
-        document.querySelector('.add-two').style.display = 'block';
-    }
-
-    setTimeout(() => {
-        modalTwo.classList.toggle('modal');
-        modalTwo.classList.remove('changes');
-        modalTwo.classList.remove('add-progress');
-    }, 300);
+    document.querySelector('.preview-ctas').classList.add('privacy-p');
+    const doc = "privacy"
+    handleSave(data, sendTo, doc);
 })
 
 // Switching Form Content
@@ -187,7 +211,7 @@ const preview = `
                             <img src="share.svg" alt="share icon">
                             Share
                         </button>
-                        <button onclick="handleDownload()">
+                        <button id="download">
                             <img src="download.svg" alt="download icon">
                             Download
                         </button>
@@ -232,7 +256,7 @@ const previewAfter = `
                             <img src="share.svg" alt="share icon">
                             Share
                         </button>
-                        <button onclick="handleDownload()">
+                        <button id="download">
                             <img src="download.svg" alt="download icon">
                             Download
                         </button>
@@ -368,7 +392,7 @@ function generateTermsTemplate(data) {
 
     template = sections.intro // setting the default value of templates to intro
 
-    Object.keys(data).slice(5).forEach((key) => {
+    Object.keys(data).slice(5, -2).forEach((key) => {
         let container = `<div>${sections[key]}</div>` // storing each object property in a div
         template += container // appending the agreement content to template
     })
@@ -382,7 +406,7 @@ function generatePrivacyTemplate(data) {
     let template;
 
     const sections = {
-        consent: `
+        intro: `
 <h1>Privacy Policy for ${data.business_name}</h1>
 
 <p>At ${data.business_name}, accessible from ${`<a href="${data.business_url}"> ${data.business_url}</a>`}, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by ${data.business_name} and how we use it.</p>
@@ -458,7 +482,7 @@ function generatePrivacyTemplate(data) {
 
     template = sections.intro // setting the default value of templates to intro
 
-    Object.keys(data).slice(5).forEach((key) => {
+    Object.keys(data).slice(6, -2).forEach((key) => {
         let container = `<div>${sections[key]}</div>` // storing each object property in a div
         template += container // appending the agreement content to template
     })
@@ -475,7 +499,8 @@ function handleExit() {
 
 // Saving And Pushing User Data To Database
 let tokenAccess = JSON.parse(localStorage.getItem('credentials'))
-function handleSave(formObject, endpoint) {
+
+function handleSave(formObject, endpoint, doc) {
     const access = tokenAccess.access;
     fetch(`${endpoint}`, {
         method: 'POST',
@@ -485,10 +510,19 @@ function handleSave(formObject, endpoint) {
         },
         body: JSON.stringify(formObject)
     }).then(res => {
+        // if (!res.ok) {
+        //     throw new Error(res.statusText)
+        // }
         return res.json()
     }).then(data => {
+        console.log(data);
         localStorage.setItem('doc-id', data.id)
-    }).catch(error => console.log(error));
+        doc === "terms" ? postTermsSave() : postPrivacySave()
+    })
+        .catch(error => {
+            console.log(error)
+            return false;
+        })
 }
 
 // Adding Data To Dashboard
@@ -514,6 +548,7 @@ function handleAdd() {
         console.log(data);
         previewWrapper.innerHTML = mainContent;
         localStorage.removeItem('doc-id')
+        location.reload();
     }).catch(error => console.log(error));
 }
 
@@ -539,6 +574,7 @@ function handleAddTwo() {
         console.log(data);
         previewWrapper.innerHTML = mainContent;
         localStorage.removeItem('doc-id')
+        location.reload();
     }).catch(error => console.log(error));
 }
 
@@ -562,15 +598,13 @@ const downloadTemplate = (template) => {
         'width': 170,
         'elementHandlers': specialElementHandlers,
     })
-    doc.save(`${localStorage.getItem('privacy')}.pdf`)
+    doc.save(`Document.pdf`)
 }
 
 // Downloading Document Created
-function handleDownload() {
-    privacyFormData = new FormData(priDetails)
-    privacyObjectData = Object.fromEntries(privacyFormData)
+function handleDownload(data) {
 
-    const finishedTemplate = generatePrivacyTemplate(privacyObjectData)
+    const finishedTemplate = data.name === "terms" ? generateTermsTemplate(data) : generatePrivacyTemplate(data)
     downloadTemplate(finishedTemplate)
     const moreOptions = document.querySelector('.more');
     moreOptions.classList.toggle('show-more');
@@ -585,7 +619,7 @@ function handleExport() {
                             <button onclick="docxFormat()">DOCX</button>
                             <button onclick="txtFormat()">TXT</button>
                             <button onclick="htmlFormat()">HTML</button>
-                        </div`
+                        </div>`
 }
 
 // Exporting as DOCX
@@ -638,31 +672,27 @@ document.querySelectorAll('.doc-toggle').forEach(doc => {
     })
 })
 
-function closePreview() { 
+function closePreview() {
     document.querySelector('.doc-wrapper').classList.toggle('show-doc');
 }
 
 // LogOut
 function logOut() {
     localStorage.removeItem('credentials');
-    localStorage.removeItem('fname', data.first_name)
-    localStorage.removeItem('lname', data.last_name)
-    localStorage.removeItem('email', data.email)
+    localStorage.removeItem('fname')
+    localStorage.removeItem('lname')
+    localStorage.removeItem('email')
     window.location.href = 'https://abshaibu.github.io/test-P71/login.html';
 }
 
 window.addEventListener('DOMContentLoaded', () => {
     handleGetUser();
     handleDisplay();
-    setInterval(() => {
-
-    }, 200)
 })
 
 // Get user details
 function handleGetUser() {
     let tokens = JSON.parse(localStorage.getItem('credentials'));
-    console.log(tokens);
     fetch(`${baseUrl}/users/${tokens.id}/`, {
         method: 'GET',
         headers: {
@@ -687,6 +717,7 @@ function handleGetUser() {
 // Displaying All Documents user has created
 const pWrapper = document.querySelectorAll('.privacy-wrapper')
 const tWrapper = document.querySelectorAll('.terms-wrapper')
+
 function handleDisplay() {
     let tokenAccess = JSON.parse(localStorage.getItem('credentials'))
     fetch(`${baseUrl}/users/${tokenAccess.id}/documents`, {
@@ -697,18 +728,20 @@ function handleDisplay() {
     }).then(res => {
         return res.json()
     }).then(data => {
-        console.log(data);
         privacyDocs = data.privacy_policies;
         privacyDocs.forEach(pd => {
+            pd.name = "privacy"
             oPreview = generatePrivacyTemplate(pd);
+            console.log(oPreview);
             pWrapper.forEach(wrapper => {
                 wrapper.innerHTML += renderDocuments(pd);
             })
         })
-        
+
         termsDocs = data.terms;
         termsDocs.forEach(td => {
-            tWrapper.forEach(wrapper => { 
+            td.name = "terms"
+            tWrapper.forEach(wrapper => {
                 wrapper.innerHTML += renderDocuments(td);
             })
         })
@@ -719,15 +752,15 @@ function handleDisplay() {
 // Get Individual Document
 const renderDocuments = (document) => {
     const dashboard = `<div>
+    <button data-category=${document.name} class="thrash delete" data-id=${document.id}><img class="delete" src="../images/trash.svg" data-category=${document.name} data-id=${document.id}></button>
     <p>${document.document_name}</p>
-<div>
-<button class="docu-btn docu-primary" onclick="openPreview()">
+<button class="docu-btn docu-primary docu-prim" data-id=${document.id} data-bar=${document.name}>
     <div>
-        <img src="docu-image.png" alt="an image of a document">
+        <img class="docu-prim" data-id=${document.id} data-bar=${document.name} src="docu-image.png" alt="an image of a document">
     </div>
     <div>
-        <p>
-            <img src="eye.svg" alt="an eye icon">Preview
+        <p class="docu-prim" data-id=${document.id} data-bar=${document.name}>
+            <img src="eye.svg" class="docu-prim" data-id=${document.id} data-bar=${document.name} alt="an eye icon">Preview
         </p>
     </div>
 </button>
@@ -738,7 +771,71 @@ const renderDocuments = (document) => {
 }
 
 // Previewing Individual Document
-function openPreview() {
+function openPreview(docId, docName) {
+    console.log(docName, "openPreview")
+    const docType = (docName === "terms") ? "terms-and-conditions" : "privacy-policies";
     document.querySelector('.doc-wrapper').classList.toggle('show-doc');
     document.querySelector('.inner-doc').innerHTML = previewAfter;
+    fetch(`${baseUrl}/${docType}/${docId}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${tokenAccess.access}`
+        }
+    }).then(res => {
+
+        return res.json()
+    }).then(data => {
+
+        document.querySelector('.inner-preview').innerHTML = docName === "terms" ? generateTermsTemplate(data) : generatePrivacyTemplate(data);
+        console.log(data)
+    })
+}
+
+function deleteDoc(id, docCate) {
+    fetch(`${baseUrl}/${docCate}/${id}/delete`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${tokenAccess.access}`
+        }
+    }).then(res => {
+        return res.status;
+    }).then(data => {
+        location.reload();
+        console.log(data)
+    }).catch(error => console.log(error));
+}
+
+
+function postTermsSave() {
+    modalOne.classList.add('add-progress');
+    body.classList.toggle('no-scroll');
+    document.querySelector('.heading').innerHTML = 'Preview';
+    if (openModal.classList.contains('modal1')) {
+        document.querySelector('.add-two').style.display = 'none';
+        document.querySelector('.add-one').style.display = 'block';
+    }
+
+    setTimeout(() => {
+        modalOne.classList.toggle('modal');
+        modalOne.classList.remove('changes');
+        modalOne.classList.remove('add-progress');
+        modalTwo.classList.remove('changes');
+    }, 300);
+}
+
+function postPrivacySave() {
+
+    modalTwo.classList.add('add-progress');
+    body.classList.toggle('no-scroll');
+    document.querySelector('.heading').innerHTML = 'Preview';
+    if (!openModal.classList.contains('modal2')) {
+        document.querySelector('.add-one').style.display = 'none';
+        document.querySelector('.add-two').style.display = 'block';
+    }
+
+    setTimeout(() => {
+        modalTwo.classList.toggle('modal');
+        modalTwo.classList.remove('changes');
+        modalTwo.classList.remove('add-progress');
+    }, 300);
 }
