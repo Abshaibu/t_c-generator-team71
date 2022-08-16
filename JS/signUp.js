@@ -52,8 +52,7 @@ form.addEventListener('submit', e => {
             body: JSON.stringify(data)
         }).then(res => {
             if (res.status === 201) {
-                // window.location.href = 'https://abshaibu.github.io/test-P71/dashboard/dashboard.html'
-                window.location.href = 'https://127.0.0.1:5500/dashboard/dashboard.html'
+                window.location.href = 'https://abshaibu.github.io/test-P71/dashboard/dashboard.html'
             } else {
                 incorrect.style.display = 'flex';
                 incorrect.innerHTML = 'Email already exists'
@@ -74,6 +73,7 @@ form.addEventListener('submit', e => {
             localStorage.setItem('lname', data.last_name)
             localStorage.setItem('email', data.email)
             localStorage.setItem('credentials', JSON.stringify(authToken));
+            form.reset();
             return authToken;
         }).catch(error => console.log(error));
     } else {
