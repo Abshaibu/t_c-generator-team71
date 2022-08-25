@@ -53,6 +53,7 @@ form.addEventListener('submit', e => {
         }).then(res => {
             if (res.status === 201) {
                 window.location.href = 'https://abshaibu.github.io/test-P71/dashboard/dashboard.html'
+                // window.location.href = 'http://127.0.0.1:5500/dashboard/dashboard.html';
             } else {
                 incorrect.style.display = 'flex';
                 incorrect.innerHTML = 'Email already exists'
@@ -61,7 +62,6 @@ form.addEventListener('submit', e => {
                     incorrect.style.display = 'none';
                 }, 2500)
             }
-            console.log(res);
             return res.json();
         }).then(data => {
             authToken = {
@@ -69,9 +69,6 @@ form.addEventListener('submit', e => {
                 access: data.tokens.access,
                 id: data.id
             }
-            localStorage.setItem('fname', data.first_name)
-            localStorage.setItem('lname', data.last_name)
-            localStorage.setItem('email', data.email)
             localStorage.setItem('credentials', JSON.stringify(authToken));
             form.reset();
             return authToken;

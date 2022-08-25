@@ -91,22 +91,14 @@
                     <section class="wrapper preview-cons">
                         <div class="terms">
                             <h2>Drafts</h2>
-                            <div class="drafts">
-                                <button class="docu-btn docu-primary">
-                                    <div>
-                                        <img src="docu-image.png" alt="an image of a document">
-                                    </div>
-                                    <div>
-                                        <p>
-                                            <img src="edit.svg" alt="a pen icon">Edit
-                                        </p>
-                                    </div>
-                                </button>
+                            <div class="drafts terms-draft">
+                                <p class="draft-t">No drafts created</p>
                             </div>
                         </div>
                         <div class="privacy ">
                             <h2>Terms and Conditions</h2>
                             <div class="terms-wrapper">
+                                <p class="draft-dt">No document created</p>
                             </div>
                         </div>
                     </section>
@@ -116,25 +108,17 @@
 
                 <!-- Privacy Tab -->
                 <div class="tab" data-id="tab3">
-                    <section class="wrapper preview">
+                    <section class="wrapper preview preview-cons">
                         <div class="terms">
                             <h2>Drafts</h2>
-                            <div class="drafts">
-                                <button class="docu-btn docu-primary">
-                                    <div>
-                                        <img src="docu-image.png" alt="an image of a document">
-                                    </div>
-                                    <div>
-                                        <p>
-                                            <img src="edit.svg" alt="a pen icon">Edit
-                                        </p>
-                                    </div>
-                                </button>
+                            <div class="drafts privacy-draft">
+                                <p class="draft-p">No drafts created</p> 
                             </div>
                         </div>
                         <div class="privacy">
                             <h2>Privacy Policy</h2>
                             <div class="privacy-wrapper">
+                                <p class="draft-d">No document created</p>
                             </div>
                         </div>
                     </section>
@@ -145,54 +129,84 @@
                 <!-- Profile Tab -->
                 <div class="tab" data-id="tab4">
                     <div class="profile-wrapper">
-                        <div class="left">
-                            <div class="avatar white shadow">
-                                <div class="first avatar_alt">
-                                    <div class="profile-img">
+                        <div class="main-details">
+                            <div class="profile-form">
+                                <div>
+                                    <div class="profile-img large">
                                         <p class="initials">JD</p>
                                     </div>
-                                    <span class="name alt alt_alt">John Doe</span>
+                                    <p class="name">John Doe</p>
                                 </div>
-                                <div class="third avatar_alt avatar_alt_alt">
-                                    <span class="num-text  alt">Email</span>
-                                    <div class="edit-btn">
-                                        <form action="" style="margin-top:0"
-                                        class="profile-form">
-                                            <input type="email" name="email" placeholder="********"
-                                                style="padding-left:1rem"
-                                                class="email-change">
-                                            <button class="edit_btn" type="submit">
-                                                <img src="edit-2.svg" alt="pen icon">
-                                                Change
-                                            </button>
-                                        </form>
+                                <form action="" class="basic-form">
+                                    <div>
+                                        <label for="fname">
+                                            <p>First name</p>
+                                        </label>
+                                        <input type="text" name="first_name" placeholder="First name" id="fname" class="profile-input">
+                                        <small class="pr-error">This field is required</small>
                                     </div>
-                                </div>
-
+                                    <div>
+                                        <label for="lname">
+                                            <p>Last name</p>
+                                        </label>
+                                        <input type="text" name="last_name" id="lname" placeholder="Last name" class="profile-input">
+                                        <small class="pr-error">This field is required</small>
+                                    </div>
+                                    <div>
+                                        <label for="p-email">
+                                            <p>Email</p>
+                                        </label>
+                                        <input type="email" id="p-email" name="email" placeholder="Email" class="profile-input profile-email">
+                                        <small class="pr-error mail">This field is required</small>
+                                    </div>
+                                    <button type="submit">
+                                        <img src="edit-2.svg" alt="a pen icon">
+                                        Save
+                                    </button>
+                                </form>
                             </div>
-                            <div class="password white shadow">
-                                <span class="num-text  alt">Password</span>
-                                <div class="edit-btn">
-                                    <form action="" style="margin-top:0" class="profile-form">
-                                        <input type="password" name="password" value="********"
-                                        placeholder="New Password"
-                                            style="padding-left:1rem">
-                                        <button class="edit_btn ed_btn" type="submit">
-                                            <img src="edit-2.svg" alt="pen icon">
-                                            Change
-                                        </button>
-                                    </form>
-                                </div>
+                            <div class="pass-form">
+                                <form action="" class="password-form">
+                                    <div>
+                                        <label for="password">
+                                            <p>Password</p>
+                                        </label>
+                                        <input type="password" id="password" name="password" placeholder="Old password" class="pass-input">
+                                        <small class="pr-error old-pass">This field is required</small>
+                                    </div>
+                                    <div>
+                                        <label for="confirm-password">
+                                            <p>New password</p>
+                                        </label>
+                                        <input type="password" id="confirm-password" name="new_password"
+                                            placeholder="New password" class="pass-input">
+                                            <small class="pr-error new-pass">This field is required</small>
+                                    </div>
+                                    <button type="submit" id="submit">
+                                        <img src="edit-2.svg" alt="a pen icon">
+                                        Save
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="danger-zone">
+                                <h2>Danger zone</h2>
+                                <p>Only enter if you are sure you know what you are doing!!!</p>
+                                <button class="danger-btn toggle-delete">
+                                    <img src="danger.svg" alt="a danger icon">
+                                    Delete account
+                                </button>
                             </div>
                         </div>
-                        <div class="right">
-                            <div class="draft white white_alt shadow">
-                                <h2>Total Number of Drafts Created</h2>
-                                <p class="draft-count">No data</p>
+                        <div class="doc-stats">
+                            <div class="stat draft-stat">
+                                <p>Total Number of Drafts Created</p>
+                                <p class="count draft-null">No data</p>
+                                <p class="count draft-count"></p>
                             </div>
-                            <div class="saved white white_alt white_alt_two shadow ">
-                                <h2 class="chop">Total Number of Saved Documents</h2>
-                                <p class="cc doc-count">No data</p>
+                            <div class="stat doc-stat">
+                                <p>Total Number of Saved Documents</p>
+                                <p class="count doc-null">No data</p>
+                                <p class="count doc-count"></p>
                             </div>
                         </div>
                     </div>
@@ -229,30 +243,31 @@
                                         <img src="shop.svg" alt="shop icon">
                                     </label>
                                     <input type="text" name="business_name" id="bizname" placeholder="John Doe Limited"
-                                        required>
+                                    class="modal-form">
                                 </div>
                                 <div>
                                     <label for="url">Website URL
                                         <img src="global.svg" alt="globe icon">
                                     </label>
                                     <input type="text" name="business_url" id="url" placeholder="https://johndoe.com"
-                                        required>
-                                    <small>URL format must be https://johndoe.com</small>
+                                    class="modal-form">
+                                    <small class="url">URL format must be https://johndoe.com and unique</small>
                                 </div>
                                 <div>
                                     <label for="email">Email
                                         <img src="input-email.svg" alt="envelope icon">
                                     </label>
                                     <input type="email" name="contact_email" id="email" placeholder="johndoe@gmail.com"
-                                        required>
+                                    class="modal-form">
+                                    <small class="email">Email is not valid</small>
                                 </div>
                                 <div>
                                     <label for="phone">Phone
                                         <img src="call.svg" alt="phone icon">
                                     </label>
                                     <input type="text" name="contact_phone" id="phone" placeholder="+234 812 657 9745"
-                                        required>
-                                    <small>phone format must be +234 XXX XXX XXXX</small>
+                                    class="modal-form">
+                                    <small class="phone">phone format must be +234XXXXXXXXXX</small>
                                 </div>
                             </div>
                             <div class="terms-features">
@@ -262,7 +277,8 @@
                                         <img src="grey-file.svg" alt="shop icon">
                                     </label>
                                     <input type="text" name="document_name" id="docname"
-                                        placeholder="Awesome name goes here" required>
+                                        placeholder="Awesome name goes here">
+                                        <small class="docname-error">Field is required</small>
                                 </div>
                                 <div>
                                     <input type="checkbox" name="cookies" id="cookies">
@@ -295,7 +311,7 @@
                                         alt="right arrow icon">
                                     Back
                                 </button>
-                                <button type="button" class="proceed switch-form te-btn">
+                                <button type="button" class="proceed switch-form">
                                     Proceed
                                     <img src="arrow-circle-right.svg" alt="right arrow icon">
                                 </button>
@@ -339,30 +355,31 @@
                                         <img src="shop.svg" alt="shop icon">
                                     </label>
                                     <input type="text" name="business_name" id="mbizname" placeholder="John Doe Limited"
-                                        required>
+                                        class="modal-form2">
                                 </div>
                                 <div>
                                     <label for="murl">Website URL
                                         <img src="global.svg" alt="globe icon">
                                     </label>
                                     <input type="text" name="business_url" id="murl" placeholder="https://johndoe.com"
-                                        required>
-                                    <small>URL format must be https://johndoe.com</small>
+                                        class="modal-form2">
+                                    <small class="url">URL format must be https://johndoe.com and unique</small>
                                 </div>
                                 <div>
                                     <label for="memail">Email
                                         <img src="input-email.svg" alt="envelope icon">
                                     </label>
                                     <input type="email" name="contact_email" id="memail" placeholder="johndoe@gmail.com"
-                                        required>
+                                        class="modal-form2">
+                                        <small class="email">Email is not valid</small>
                                 </div>
                                 <div>
                                     <label for="mphone">Phone
                                         <img src="call.svg" alt="phone icon">
                                     </label>
                                     <input type="text" name="contact_phone" id="mphone" placeholder="+234 812 657 9745"
-                                        required>
-                                    <small>phone format must be +234 XXX XXX XXXX</small>
+                                        class="modal-form2">
+                                    <small class="phone">phone format must be +234XXXXXXXXXX</small>
                                 </div>
                             </div>
                             <div class="terms-features">
@@ -372,7 +389,8 @@
                                         <img src="grey-file.svg" alt="shop icon">
                                     </label>
                                     <input type="text" name="document_name" id="mdocname"
-                                        placeholder="Awesome name goes here" required>
+                                        placeholder="Awesome name goes here">
+                                        <small class="docname-error">Field is required</small>
                                 </div>
                                 <div>
                                     <input type="checkbox" name="consent" id="mconsent">
@@ -415,7 +433,7 @@
                                         alt="right arrow icon">
                                     Back
                                 </button>
-                                <button type="button" class="proceed switch-form pr-btn">
+                                <button type="button" class="proceed switch-form">
                                     Proceed
                                     <img src="arrow-circle-right.svg" alt="right arrow icon">
                                 </button>
@@ -432,6 +450,27 @@
             <!-- Preview Doc Modal -->
             <div class="doc-wrapper">
                 <div class="inner-doc">
+                </div>
+            </div>
+
+            <!-- Delete Account Modal -->
+            <div class="delete-wrapper">
+                <div class="delete-modal">
+                    <button class="toggle-delete cls-delete">
+                        <img src="cls.svg" alt="a close icon">
+                    </button>
+                    <p>Are you sure you want to delete your account? The following action cannot be reversed please
+                        proceed with caution.</p>
+                    <form action="" class="delete-form">
+                        <div>
+                            <small>Please enter your password to continue</small>
+                            <input type="password" name="password" placeholder="Enter your password" class="delete-password">
+                            <small class="delete-error">This field is required</small>
+                        </div>
+                        <div>
+                            <input type="submit" value="I still wish to delete my account">
+                        </div>
+                    </form>
                 </div>
             </div>
         </main>

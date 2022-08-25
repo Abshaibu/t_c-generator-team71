@@ -4,6 +4,9 @@ const incorrect = document.querySelector('.incorrect');
 const errorText = document.querySelector('.error-text');
 form.addEventListener('submit', e => {
     e.preventDefault();
+    if (incorrect) {
+        incorrect.style.display = 'none';
+    }
 
     if (password.value === '') {
         incorrect.style.display = 'flex';
@@ -34,14 +37,12 @@ form.addEventListener('submit', e => {
                 form.reset();
                 setTimeout(() => { 
                     window.location.href = 'https://abshaibu.github.io/test-P71/login.html';
+                    // window.location.href = 'http://127.0.0.1:5500/login.html';
+                    
                 },3000);
             } else {
                 incorrect.style.display = 'flex';
                 errorText.innerHTML = 'Password must be at least 8 characters long';
-    
-                setTimeout(() => {
-                    incorrect.style.display = 'none';
-                }, 2500)
             }
             console.log(res);
             return res.json()

@@ -2,6 +2,7 @@ const form = document.querySelector('.form')
 const inputType = document.getElementById('password')
 const email = document.getElementById('email')
 const xIcon = document.querySelector('.eye-off')
+const errMsg = document.querySelectorAll('.error-message')
 const errEmail = document.querySelector('.error-email')
 const errPassword = document.querySelector('.error-password')
 const incorrect = document.querySelector('.incorrect')
@@ -23,28 +24,26 @@ xIcon.addEventListener('click', () => {
     }
 })
 
-
+const validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 form.addEventListener('submit', (e) => {
     e.preventDefault();
 
     if (email.value === '' && inputType.value === '') {
-        form.classList.add('error')
-        setTimeout(() => {
-            form.classList.remove('error')
-        }, 2500)
+        errMsg.forEach(err => { 
+            err.style.display = 'flex'
+        })
     } else if (email.value === '') {
         form.classList.add('error1')
-        setTimeout(() => {
-            form.classList.remove('error1')
-        }, 2500)
     } else if (inputType.value === '') {
         form.classList.add('error2')
-        setTimeout(() => {
-            form.classList.remove('error2')
-        }, 2500)
-    }
+    } else if (email.value.match(validRegex)) {
 
-    const formData = new FormData(form);
+        if (!email.value.match(validRegex)) {
+            errEmail.style.display = 'flex';
+            incorrectText.innerHTML = 'Please enter a valid email';
+        }
+    }
+const formData = new FormData(form);
     const data = Object.fromEntries(formData);
     fetch(`${baseUrl}/users/obtain-token/`, {
         method: 'POST',
@@ -55,13 +54,10 @@ form.addEventListener('submit', (e) => {
     }).then(res => {
         if (res.status === 201) {
             window.location.href = 'https://abshaibu.github.io/test-P71/dashboard/dashboard.html'
+            // window.location.href = 'http://127.0.0.1:5500/dashboard/dashboard.html';
         } else {
             incorrect.style.display = 'flex';
             incorrectText.innerHTML = 'Incorrect email or password';
-
-            setTimeout(() => {
-                incorrect.style.display = 'none';
-            }, 2500)
         }
         return res.json();
     }).then(data => {
@@ -75,4 +71,5 @@ form.addEventListener('submit', (e) => {
     }).then({
 
     }).catch(error => console.log(error));
+
 })

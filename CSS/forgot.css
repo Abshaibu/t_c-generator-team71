@@ -200,6 +200,23 @@ input[type="submit"] {
     display: none;
 }
 
+.success-close {
+    position: absolute;
+    top: -4px;
+    right: -3px;
+    background: #070707c5;
+    font-size: 1.2rem;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #FEFEFE;
+    cursor: pointer;
+}
+
 .login-link {
     display: block;
     width: 7.5rem;

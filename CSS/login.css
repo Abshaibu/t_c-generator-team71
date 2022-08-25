@@ -173,7 +173,8 @@ input:focus {
 
 .error1 .err-mail,
 .error2 .err-pass,
-.error .error-message {
+.error .err-mail,
+.error .err-pass {
   display: flex;
 }
 

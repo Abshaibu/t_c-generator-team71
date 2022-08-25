@@ -10,51 +10,63 @@ const modalTwos = document.querySelector('.modal2-btn');
 const body = document.querySelector('body');
 const previewWrapper = document.querySelector('.preview');
 const baseUrl = 'https://termsbuddy.herokuapp.com/api';
-const forms = document.querySelectorAll('form');
+let tokenAccess = JSON.parse(localStorage.getItem('credentials'))
 let termsObj = {};
 let privacyObj = {};
 let downloadObj;
 let singlePrivacyObj = {};
 let singleTermsObj = {};
-const counter = {draft: 0, doc: 0}
+let docsUrl = {
+    terms: [],
+    privacy: []
+}
+const counter = {
+    draft: 0,
+    doc: 0
+}
 
-
-const wrapper = document.querySelector(".wrapper");
-wrapper.addEventListener('click', (e) => {
-    const id = e.target.getAttribute('data-id')
-    const docName = e.target.getAttribute('data-bar')
-    if (e.target.id === 'download') {
-        if (e.target.closest('.terms-c')) {
-            handleDownload(termsObj)
-        } else if (e.target.closest('.privacy-p')) {
-            handleDownload(privacyObj)
-        }
-    }
-    if (e.target.classList.contains('delete')) {
-        const docId = e.target.getAttribute('data-id');
-        const cate = e.target.getAttribute('data-category')
-        let category;
-        if (cate === 'terms') {
-            category = 'terms-and-conditions';
-            deleteDoc(docId, category)
-        } else if (cate === 'privacy') {
-            category = 'privacy-policies';
-            deleteDoc(docId, category)
-        }
-    }
-
-})
-const previewCons = document.querySelector(".preview-cons");
-previewCons.addEventListener('click', (e) => {
-    if (e.target.classList.contains('docu-prim')) {
+// Deleting Document based on category
+const wrapper = document.querySelectorAll(".wrapper");
+wrapper.forEach(item => {
+    item.addEventListener('click', (e) => {
         const id = e.target.getAttribute('data-id')
         const docName = e.target.getAttribute('data-bar')
-        openPreview(id, docName);
-    }
+        if (e.target.id === 'download') {
+            if (e.target.closest('.terms-c')) {
+                handleDownload(termsObj)
+            } else if (e.target.closest('.privacy-p')) {
+                handleDownload(privacyObj)
+            }
+        }
+        if (e.target.classList.contains('delete')) {
+            const docId = e.target.getAttribute('data-id');
+            const cate = e.target.getAttribute('data-category')
+            let category;
+            if (cate === 'terms') {
+                category = 'terms-and-conditions';
+                deleteDoc(docId, category)
+            } else if (cate === 'privacy') {
+                category = 'privacy-policies';
+                deleteDoc(docId, category)
+            }
+        }
+    })
+})
+
+// Previewing Document based on category
+const previewCons = document.querySelectorAll(".preview-cons");
+previewCons.forEach(preview => {
+    preview.addEventListener('click', (e) => {
+        if (e.target.classList.contains('docu-prim')) {
+            const id = e.target.getAttribute('data-id')
+            const docName = e.target.getAttribute('data-bar')
+            openPreview(id, docName);
+        }
+    })
 })
 
 const docWrapper = document.querySelector('.doc-wrapper');
-docWrapper.addEventListener('click', (e) => { 
+docWrapper.addEventListener('click', (e) => {
     if (e.target.id === 'download') {
         handleDownload(downloadObj)
     }
@@ -79,6 +91,7 @@ modalOnes.addEventListener('click', () => {
     body.classList.toggle('no-scroll');
     modalTwo.classList.toggle('changes');
     openModal.classList.toggle('changes');
+    handleDisplay();
     previewWrapper.innerHTML = mainContent;
     location.reload();
 })
@@ -88,9 +101,9 @@ modalTwos.addEventListener('click', () => {
     body.classList.toggle('no-scroll');
     modalTwo.classList.toggle('changes');
     openModal.classList.toggle('changes');
+    handleDisplay();
     previewWrapper.innerHTML = mainContent;
     location.reload();
-
 })
 
 // New Terms Modal
@@ -112,47 +125,210 @@ function privacyModal() {
 const bizDetails = document.querySelector(".conditions-details");
 bizDetails.addEventListener('submit', (e) => {
     e.preventDefault();
-    const sendTo = `${baseUrl}/terms-and-conditions/create/`;
-    const formData = new FormData(bizDetails);
-    // formData.append('permanent', false);
-    let data = Object.fromEntries(formData);
-    data.permanent = false
-    termsObj = data;
-    termsObj.name = 'terms';
-    document.querySelector('.inner-preview').innerHTML = generateTermsTemplate(data);
-    document.querySelector('.preview-ctas').classList.add('terms-c');
-    const doc = "terms"
-    handleSave(data, sendTo, doc)
+    docName = document.querySelector('#docname')
+    if (docName.value.trimStart() !== "") { 
+        const sendTo = `${baseUrl}/terms-and-conditions/create/`;
+        const formData = new FormData(bizDetails);
+        // formData.append('permanent', false);
+        let data = Object.fromEntries(formData);
+        data.permanent = false
+        termsObj = data;
+        termsObj.name = 'terms';
+        document.querySelector('.inner-preview').innerHTML = generateTermsTemplate(data);
+        document.querySelector('.preview-ctas').classList.add('terms-c');
+        const doc = "terms"
+        handleSave(data, sendTo, doc)
+    } else {
+        docName.style.borderColor = "#ED4A1F";
+        document.querySelectorAll('.docname-error').forEach(error => error.style.display = "block");
+    }
+    docName.addEventListener('input', () => {
+        docName.style.borderColor = "#BABABA";
+        document.querySelectorAll('.docname-error').forEach(error => error.style.display = "none");
+    })
 })
 
 // Business Privacy Details Form
 const priDetails = document.querySelector(".privacy-details");
 priDetails.addEventListener('submit', (e) => {
     e.preventDefault();
-    const sendTo = `${baseUrl}/privacy-policies/create/`;
-    const formData = new FormData(priDetails);
-    // formData.append('permanent', false);
-    let data = Object.fromEntries(formData);
-    data.permanent = false
-    privacyObj = data;
-    privacyObj.name = 'privacy';
-    document.querySelector('.inner-preview').innerHTML = generatePrivacyTemplate(data);
-    document.querySelector('.preview-ctas').classList.add('privacy-p');
-    const doc = "privacy"
-    handleSave(data, sendTo, doc);
+    docName = document.querySelector('#mdocname');
+    if (docName.value.trimStart() !== "") { 
+        const sendTo = `${baseUrl}/privacy-policies/create/`;
+        const formData = new FormData(priDetails);
+        // formData.append('permanent', false);
+        let data = Object.fromEntries(formData);
+        data.permanent = false
+        privacyObj = data;
+        privacyObj.name = 'privacy';
+        document.querySelector('.inner-preview').innerHTML = generatePrivacyTemplate(data);
+        document.querySelector('.preview-ctas').classList.add('privacy-p');
+        const doc = "privacy"
+        handleSave(data, sendTo, doc);
+    } else {
+        docName.style.borderColor = "#ED4A1F";
+        document.querySelectorAll('.docname-error').forEach(error => error.style.display = "block");
+    }
+    docName.addEventListener('input', () => {
+        docName.style.borderColor = "#BABABA";
+        document.querySelectorAll('.docname-error').forEach(error => error.style.display = "none");
+    })
 })
 
 // Switching Form Content
 const switchForms = document.querySelectorAll('.switch-form');
+let termsUrl = '';
+let privacyUrl = '';
 switchForms.forEach(swap => {
-    swap.addEventListener('click', () => {
+    swap.addEventListener('click', (e) => {
+        if (e.target.parentElement.parentElement.classList.contains('conditions-details')) {
+            handleValidation(termsUrl, '#bizname', '#url', '#email', '#phone');
+        } else if (e.target.parentElement.parentElement.classList.contains('privacy-details')) {
+            handleValidation(privacyUrl, '#mbizname', '#murl', '#memail', '#mphone');
+        }
+    })
+    const emailMessage = document.querySelectorAll('.email');
+    const modalInput = document.querySelectorAll('.modal-form');
+    modalInput.forEach(input => {
+        input.addEventListener('change', () => {
+            input.style.borderColor = "#BABABA";
+            emailMessage.forEach(message => {
+                message.style.display = 'none';
+            })
+        })
+    })
+
+    const modalInputTwo = document.querySelectorAll('.modal-form2');
+    modalInputTwo.forEach(input => {
+        input.addEventListener('change', () => {
+            input.style.borderColor = "#BABABA";
+            emailMessage.forEach(message => {
+                message.style.display = 'none';
+            })
+        })
+    })
+})
+
+// Form Switcher Validation
+function handleValidation(formUrl, name, url, email, phone) {
+    for (const url in docsUrl) {
+        formUrl += `${docsUrl[url]}`;
+    };
+    let nameValid = checkBusinessName(name)
+    let urlValid = checkBusinessUrl(url)
+    let emailValid = checkBusinessEmail(email)
+    let phoneValid = checkBusinessPhone(phone)
+
+    //formValid will be true if all checks passes 
+    let formValid = nameValid && urlValid && emailValid && phoneValid;
+    if (formValid === true && !formUrl.includes(document.querySelector(url).value.trim())) {
         openModal.classList.toggle('changes');
         openModal.classList.remove('add-progress');
         modalTwo.classList.toggle('changes');
         modalTwo.classList.remove('add-progress');
         previewWrapper.innerHTML = preview;
-    })
-})
+    } else {
+        const urlMessage = document.querySelectorAll('.url');
+        document.querySelector(url).style.borderColor = '#ED4A1F';
+        urlMessage.forEach(message => {
+            message.style.color = '#ED4A1F';
+        })
+    }
+}
+
+const isRequired = (value) => {
+    if (value.trimStart() === '') {
+        return true
+    } else {
+        return false
+    }
+}
+
+const isEmailValid = (email) => {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+};
+
+const isPhoneValid = (phone) => {
+    // const re = /^[0-9]{10}$/;
+    // return re.test(phone);
+    console.log(phone);
+}
+
+const isUrlValid = (url) => {
+    const expression = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/gm;
+    return expression.test(url);
+    // const regex = new RegExp(expression);
+}
+
+const checkBusinessName = (value) => {
+    let valid = false;
+    const businessName = document.querySelector(value);
+    if (isRequired(businessName.value)) {
+        businessName.style.borderColor = '#ED4A1F';
+    } else {
+        businessName.style.borderColor = '#039855';
+        valid = true;
+    }
+    return valid
+}
+
+const checkBusinessUrl = (value) => {
+    let valid = false;
+    const url = document.querySelector(value);
+    const urlMessage = document.querySelectorAll('.url');
+    if (isRequired(url.value) === false && isUrlValid(url.value)) {
+        url.style.borderColor = '#039855';
+        urlMessage.forEach(message => { 
+            message.style.color = '#039855';
+        })
+        valid = true;
+    } else {
+        url.style.borderColor = '#ED4A1F';
+        urlMessage.forEach(message => {
+            message.style.color = '#ED4A1F';
+        })
+    }
+    return valid
+}
+
+const checkBusinessEmail = (value) => {
+    let valid = false;
+    const email = document.querySelector(value);
+    const emailMessage = document.querySelectorAll('.email');
+    if (isRequired(email.value) === false && isEmailValid(email.value)) {
+        email.style.borderColor = '#039855';
+        emailMessage.forEach(message => { 
+            message.style.display = 'none';
+        })
+        valid = true;
+    } else {
+        email.style.borderColor = '#ED4A1F';
+        emailMessage.forEach(message => {
+            message.style.display = 'block';
+        })
+    }
+    return valid
+}
+
+const checkBusinessPhone = (value) => {
+    let valid = false;
+    const phone = document.querySelector(value);
+    const phoneMessage = document.querySelectorAll('.phone');
+    if (isRequired(phone.value) === true) {
+        phone.style.borderColor = '#ED4A1F';
+        phoneMessage.forEach(message => {
+            message.style.color = '#ED4A1F';
+        })
+    } else {
+        phone.style.borderColor = '#039855';
+        phoneMessage.forEach(message => {
+            message.style.color = '#039855';
+            valid = true;
+        })
+    }
+    return valid
+}
 
 // Tabs Switcher
 $(document).ready(function () {
@@ -161,8 +337,31 @@ $(document).ready(function () {
         $(".tab[data-id='" + $(this).attr('data-id') + "']").addClass("tab-active");
         $(".tab-a").removeClass('active-a');
         $(this).parent().find(".tab-a").addClass('active-a');
+        localStorage.setItem('activeTab', $(this).attr('data-id'));
     });
+    let activeTab = localStorage.getItem('activeTab');
+    if (activeTab) {
+        $(".tab").removeClass('tab-active');
+        $(".tab[data-id='" + activeTab + "']").addClass("tab-active");
+        $(this).parent().find(".tab-a").addClass('active-a');
+    }
 });
+
+// const tabs = document.querySelectorAll('.tab-a')
+// const tabContents = document.querySelectorAll('.tab[data-id]')
+// tabs.forEach(tab => {
+//     tab.addEventListener('click', () => {
+//         const target = document.querySelector(tab.dataset.id)
+//         tabContents.forEach(tabContent => {
+//             tabContent.classList.remove('tab-active')
+//         })
+//         tabs.forEach(tab => {
+//             tab.classList.remove('active-a')
+//         })
+//         tab.classList.add('active-a')
+//         target.classList.add('tab-active')
+//     })
+// })
 
 // Main Dashboard Content
 const mainContent = `
@@ -187,8 +386,9 @@ const mainContent = `
                                     </button>
                                 </div>
                             </div>
-                        </div>
+        </div>
 `;
+
 // Default dashboard view
 previewWrapper.innerHTML = mainContent;
 
@@ -250,6 +450,10 @@ const preview = `
         `;
 
 // Preview After Save Template
+{/* <button class="preview-btn preview-save add-one" onclick="handleAdd()">
+    <img src="folder-add.svg" alt="folder icon">
+        Save
+</button> */}
 let oPreview;
 const previewAfter = `
        <div class="show-preview">
@@ -258,6 +462,7 @@ const previewAfter = `
             <div class="inner-preview open-preview">     
             </div>
             <div class="preview-ctas">
+            
                 <div>
                     <button class="preview-btn preview-more" onclick="showMore()">
                         <img src="more.svg" alt="3 black dots  icon stacked on eachother">
@@ -508,63 +713,59 @@ function generatePrivacyTemplate(data) {
 }
 
 function handleExit() {
+    location.reload();
     previewWrapper.innerHTML = mainContent;
     priDetails.reset();
     bizDetails.reset();
 }
 
 // Saving And Pushing User Data To Database
-let tokenAccess = JSON.parse(localStorage.getItem('credentials'))
-
 function handleSave(formObject, endpoint, doc) {
-    const access = tokenAccess.access;
-    fetch(`${endpoint}`, {
-        method: 'POST',
-        headers: {
-            "Content-Type": 'application/json',
-            "Authorization": `Bearer ${access}`
-        },
-        body: JSON.stringify(formObject)
-    }).then(res => {
-        return res.json()
-    }).then(data => {
-        localStorage.setItem('doc-id', data.id)
-        doc === "terms" ? postTermsSave() : postPrivacySave()
-    })
-        .catch(error => {
-            console.log(error)
-            return false;
+        const access = tokenAccess.access;
+        fetch(`${endpoint}`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": 'application/json',
+                "Authorization": `Bearer ${access}`
+            },
+            body: JSON.stringify(formObject)
+        }).then(res => {
+            return res.json()
+        }).then(data => {
+            localStorage.setItem('doc-id', data.id)
+            doc === "terms" ? postTermsSave() : postPrivacySave()
         })
+            .catch(error => {
+                console.log(error)
+                return false;
+            })
 }
 
 // Adding Data To Dashboard
 function handleAdd() {
-    let tokenAccess = JSON.parse(localStorage.getItem('credentials'))
     const formData = new FormData(bizDetails);
     formData.append('permanent', true);
     const access = tokenAccess.access;
     const data = Object.fromEntries(formData);
-    fetch(`${baseUrl}/terms-and-conditions/${localStorage.getItem('doc-id')}/update/`, {
-        method: 'PUT',
-        headers: {
-            "Content-Type": 'application/json',
-            "Authorization": `Bearer ${access}`
-        },
-        body: JSON.stringify(data)
-    }).then(res => {
-        if (!res.ok) {
-            throw new Error(res.statusText)
-        }
-        return res.json()
-    }).then(data => {
-        previewWrapper.innerHTML = mainContent;
-        localStorage.removeItem('doc-id')
-        location.reload();
-    }).catch(error => console.log(error));
+        fetch(`${baseUrl}/terms-and-conditions/${localStorage.getItem('doc-id')}/update/`, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": 'application/json',
+                "Authorization": `Bearer ${access}`
+            },
+            body: JSON.stringify(data)
+        }).then(res => {
+            if (!res.ok) {
+                throw new Error(res.statusText)
+            }
+            return res.json()
+        }).then(data => {
+            previewWrapper.innerHTML = mainContent;
+            location.reload();
+        }).catch(error => console.log(error));
 }
 
 function handleAddTwo() {
-    let tokenAccess = JSON.parse(localStorage.getItem('credentials'))
     const formData = new FormData(priDetails);
     formData.append('permanent', true);
     const access = tokenAccess.access;
@@ -583,7 +784,6 @@ function handleAddTwo() {
         return res.json()
     }).then(data => {
         previewWrapper.innerHTML = mainContent;
-        localStorage.removeItem('doc-id')
         location.reload();
     }).catch(error => console.log(error));
 }
@@ -615,7 +815,6 @@ const downloadTemplate = (template) => {
 
 // Downloading Document Created
 function handleDownload(data) {
-
     const finishedTemplate = data.name === "terms" ? generateTermsTemplate(data) : generatePrivacyTemplate(data)
     downloadTemplate(finishedTemplate)
     const moreOptions = document.querySelector('.more');
@@ -667,21 +866,23 @@ function txtFormat() {
     const showExport = document.querySelector('.export-as');
     showExport.classList.toggle('show-export');
 
-        // create an empty array that will contain the content in inner-preview
-        let arrayOfInnerPreviewContent = []
-        // storing the text of inner preview in a variable
-        let innerPreviewContent = document.querySelector('.inner-preview').innerText
-        // pushing the content previewed to the array
-        arrayOfInnerPreviewContent.push(innerPreviewContent)
-        //  converting the array to a string
-        let arrayToString = arrayOfInnerPreviewContent.toString()
-        // converting the content to a text file
-        let file = new Blob([arrayToString], { type: 'text' })
-        // creating a link to download the text file
-        let anchorTag = document.createElement('a')
-        anchorTag.href = URL.createObjectURL(file)
-        anchorTag.download = 'Document.txt'  // name of file to be changed
-        anchorTag.click()
+    // create an empty array that will contain the content in inner-preview
+    let arrayOfInnerPreviewContent = []
+    // storing the text of inner preview in a variable
+    let innerPreviewContent = document.querySelector('.inner-preview').innerText
+    // pushing the content previewed to the array
+    arrayOfInnerPreviewContent.push(innerPreviewContent)
+    //  converting the array to a string
+    let arrayToString = arrayOfInnerPreviewContent.toString()
+    // converting the content to a text file
+    let file = new Blob([arrayToString], {
+        type: 'text'
+    })
+    // creating a link to download the text file
+    let anchorTag = document.createElement('a')
+    anchorTag.href = URL.createObjectURL(file)
+    anchorTag.download = 'Document.txt' // name of file to be changed
+    anchorTag.click()
 }
 
 // Exporting as HTML
@@ -712,8 +913,6 @@ function share() {
 function handleEmbed() {
     const showExport = document.querySelector('.embed');
     showExport.classList.toggle('show-embed');
-
-
     showExport.innerHTML = `<textarea>${document.querySelector('.inner-preview').innerHTML}
     </textarea>`
 }
@@ -733,47 +932,49 @@ function closePreview() {
 // LogOut
 function logOut() {
     localStorage.removeItem('credentials');
+    localStorage.removeItem('activeTab');
     window.location.href = 'https://abshaibu.github.io/test-P71/login.html'
+    // window.location.href = 'http://127.0.0.1:5500/login.html'
 }
 
 // Window Loads Get Certain data
 window.addEventListener('load', () => {
-    const tokenAccess = JSON.parse(localStorage.getItem('credentials'))
     if (tokenAccess) {
         handleDisplay();
         handleGetUser();
     } else {
+        // window.location.href = 'http://127.0.0.1:5500/login.html'
         window.location.href = 'https://abshaibu.github.io/test-P71/login.html'
     }
 })
 
 // Get user details
 function handleGetUser() {
-    let tokens = JSON.parse(localStorage.getItem('credentials'));
-    fetch(`${baseUrl}/users/${tokens.id}/`, {
+    fetch(`${baseUrl}/users/${tokenAccess.id}/`, {
         method: 'GET',
         headers: {
-            'Authorization': `Bearer ${tokens.access}`
+            'Authorization': `Bearer ${tokenAccess.access}`
         }
     }).then(res => {
         return res.json()
     }).then(data => {
-        localStorage.setItem('fname', data.first_name)
-        localStorage.setItem('lname', data.last_name)
-        localStorage.setItem('email', data.email)
+        let x = data.first_name;
+        let y = data.last_name;
+        document.querySelector('#fname').value = x;
+        document.querySelector('#lname').value = y;
+        document.querySelector('#p-email').value = data.email;
+        document.querySelector('.name').innerHTML = `${x} ${y}`;
+        document.querySelectorAll('.initials').forEach(initial => {
+            initial.innerHTML = `${x[0]}${y[0]}`;
+        })
     }).catch(error => console.log(error));
-    let x = localStorage.getItem('fname');
-    let y = localStorage.getItem('lname');
-    document.querySelector('.email-change').value = `${localStorage.getItem('email')}`;
-    document.querySelector('.name').innerHTML = `${x} ${y}`;
-    document.querySelectorAll('.initials').forEach(initial => {
-        initial.innerHTML = `${x[0]}${y[0]}`;
-    })
 }
 
 // Displaying All Documents user has created
 const pWrapper = document.querySelectorAll('.privacy-wrapper')
 const tWrapper = document.querySelectorAll('.terms-wrapper')
+const termsDraft = document.querySelector('.terms-draft')
+const privacyDraft = document.querySelector('.privacy-draft')
 
 function handleDisplay() {
     let tokenAccess = JSON.parse(localStorage.getItem('credentials'))
@@ -787,31 +988,58 @@ function handleDisplay() {
     }).then(data => {
         privacyDocs = data.privacy_policies;
         privacyDocs.forEach(pd => {
+            docsUrl.privacy.push(pd.business_url)
             pd.name = "privacy"
+            if (pd.permanent == false) {
+                counter.draft += 1;
+                if (counter.draft != 0) {
+                    document.querySelector('.draft-p').style.display = 'none'
+                    document.querySelector('.draft-null').style.display = 'none'
+                    parseInt(document.querySelector('.draft-count').innerHTML = counter.draft)
+                } else {}
+                privacyDraft.innerHTML += renderDrafts(pd);
+            }
             oPreview = generatePrivacyTemplate(pd);
             pWrapper.forEach(wrapper => {
-                counter.doc += 1;
-                if (counter.doc != 0) {
-                    document.querySelector('.doc-count').innerHTML = counter.doc / 2;
-                } else { }
-                wrapper.innerHTML += renderDocuments(pd);
+                if (pd.permanent == true) {
+                    counter.doc += 1;
+                    if (counter.doc != 0) {
+                        document.querySelector('.draft-d').style.display = 'none'
+                        document.querySelector('.doc-null').style.display = 'none'
+                        parseInt(document.querySelector('.doc-count').innerHTML = counter.doc / 2)
+                    } else {}
+                    wrapper.innerHTML += renderDocuments(pd);
+                }
             })
         })
 
         termsDocs = data.terms;
         termsDocs.forEach(td => {
+            docsUrl.terms.push(td.business_url)
             td.name = "terms"
+            if (td.permanent == false) {
+                counter.draft += 1;
+                if (counter.draft != 0) {
+                    document.querySelector('.draft-t').style.display = 'none'
+                    document.querySelector('.draft-null').style.display = 'none'
+                    parseInt(document.querySelector('.draft-count').innerHTML = counter.draft)
+                } else {}
+                termsDraft.innerHTML += renderDrafts(td);
+            }
             tWrapper.forEach(wrapper => {
-                counter.doc += 1;
-                if (counter.doc != 0) {
-                    document.querySelector('.doc-count').innerHTML = counter.doc / 2;
-                } else { }
-                wrapper.innerHTML += renderDocuments(td);
+                if (td.permanent == true) {
+                    counter.doc += 1;
+                    if (counter.doc != 0) {
+                        document.querySelector('.draft-dt').style.display = 'none'
+                        document.querySelector('.doc-null').style.display = 'none'
+                        parseInt(document.querySelector('.doc-count').innerHTML = counter.doc / 2)
+                    } else {}
+                    wrapper.innerHTML += renderDocuments(td);
+                }
             })
         })
     }).catch(error => console.log(error));
 }
-
 
 // Get Individual Document
 const renderDocuments = (document) => {
@@ -834,6 +1062,26 @@ const renderDocuments = (document) => {
     return dashboard
 }
 
+const renderDrafts = (document) => {
+    const dashboard = `<div>
+    <button data-category=${document.name} class="thrash delete" data-id=${document.id}><img class="delete" src="../images/trash.svg" data-category=${document.name} data-id=${document.id}></button>
+    <p>${document.document_name}</p>
+<button class="docu-btn docu-primary docu-prim" data-id=${document.id} data-bar=${document.name}>
+    <div>
+        <img class="docu-prim" data-id=${document.id} data-bar=${document.name} src="docu-image.png" alt="an image of a document">
+    </div>
+    <div>
+        <p class="docu-prim" data-id=${document.id} data-bar=${document.name}>
+            <img src="edit.svg" class="docu-prim" data-id=${document.id} data-bar=${document.name} alt="an eye icon">Edit
+        </p>
+    </div>
+</button>
+</div>
+    </div>`
+
+    return dashboard
+}
+
 // Previewing Individual Document
 function openPreview(docId, docName) {
     const docType = (docName === "terms") ? "terms-and-conditions" : "privacy-policies";
@@ -845,7 +1093,6 @@ function openPreview(docId, docName) {
             'Authorization': `Bearer ${tokenAccess.access}`
         }
     }).then(res => {
-
         return res.json()
     }).then(data => {
         let mutateData = data;
@@ -863,11 +1110,13 @@ function openPreview(docId, docName) {
             privacyObj = mutateData
             downloadObj = privacyObj
         }
-
         document.querySelector('.inner-preview').innerHTML = docName === "terms" ? generateTermsTemplate(mutateData) : generatePrivacyTemplate(mutateData);
     })
+    console.log(termsObj);
+    console.log(privacyObj);
 }
 
+// Deleting Individual Document
 function deleteDoc(id, docCate) {
     fetch(`${baseUrl}/${docCate}/${id}/delete`, {
         method: 'DELETE',
@@ -875,69 +1124,204 @@ function deleteDoc(id, docCate) {
             'Authorization': `Bearer ${tokenAccess.access}`
         }
     }).then(res => {
-        return res.status;
+        if (res.ok) {
+            handleDisplay();
+            location.reload();
+        }
+        return res.json();
     }).then(data => {
-        location.reload();
+        data;
     }).catch(error => console.log(error));
 }
 
-
 function postTermsSave() {
-    modalOne.classList.add('add-progress');
-    body.classList.toggle('no-scroll');
-    document.querySelector('.heading').innerHTML = 'Preview';
-    if (openModal.classList.contains('modal1')) {
-        document.querySelector('.add-two').style.display = 'none';
-        document.querySelector('.add-one').style.display = 'block';
-    }
-
-    setTimeout(() => {
-        modalOne.classList.toggle('modal');
-        modalOne.classList.remove('changes');
-        modalOne.classList.remove('add-progress');
-        modalTwo.classList.remove('changes');
-    }, 300);
+    const docName = document.querySelector('#docname');
+        modalOne.classList.add('add-progress');
+        body.classList.toggle('no-scroll');
+        document.querySelector('.heading').innerHTML = 'Preview';
+        if (openModal.classList.contains('modal1')) {
+            document.querySelector('.add-two').style.display = 'none';
+            document.querySelector('.add-one').style.display = 'block';
+        }
+    
+        setTimeout(() => {
+            modalOne.classList.toggle('modal');
+            modalOne.classList.remove('changes');
+            modalOne.classList.remove('add-progress');
+            modalTwo.classList.remove('changes');
+        }, 300);
 }
 
 function postPrivacySave() {
-
-    modalTwo.classList.add('add-progress');
-    body.classList.toggle('no-scroll');
-    document.querySelector('.heading').innerHTML = 'Preview';
-    if (!openModal.classList.contains('modal2')) {
-        document.querySelector('.add-one').style.display = 'none';
-        document.querySelector('.add-two').style.display = 'block';
-    }
-
-    setTimeout(() => {
-        modalTwo.classList.toggle('modal');
-        modalTwo.classList.remove('changes');
-        modalTwo.classList.remove('add-progress');
-    }, 300);
+        modalTwo.classList.add('add-progress');
+        body.classList.toggle('no-scroll');
+        document.querySelector('.heading').innerHTML = 'Preview';
+        if (!openModal.classList.contains('modal2')) {
+            document.querySelector('.add-one').style.display = 'none';
+            document.querySelector('.add-two').style.display = 'block';
+        }
+        setTimeout(() => {
+            modalTwo.classList.toggle('modal');
+            modalTwo.classList.remove('changes');
+            modalTwo.classList.remove('add-progress');
+        }, 200);
 }
 
-const profileForms = document.querySelectorAll('.profile-form');
-profileForms.forEach(form => { 
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        // const formData = new FormData(e.target);
-        // const formDataObj = {};
-        // formData.forEach((value, key) => {
-        //     formDataObj[key] = value;
-        // } );
-        // fetch(`${baseUrl}/users/${tokenAccess.id}`, {
-        //     method: 'PATCH',
-        //     headers: {
-        //         'Authorization': `Bearer ${tokenAccess.access}`,
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(formDataObj)
-        // }).then(res => {
-        //     return res.json()
-        // }).then(data => {
-        //     if (data.message === "User updated successfully") {
-        //         location.reload();
-        //     }
-        // }).catch(error => console.log(error));
+// Update Profile
+const basicForm = document.querySelector('.basic-form');
+const profileInput = document.querySelectorAll('.profile-input')
+const profileEmail = document.querySelectorAll('.profile-email')
+const mail = document.querySelector('.mail')
+basicForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(basicForm);
+    const data = Object.fromEntries(formData);
+
+    if (data.first_name != "" && data.last_name != "" && data.email != "" && isEmailValid(document.querySelector('#p-email').value)) {
+        fetch(`${baseUrl}/users/${tokenAccess.id}/update-profile/`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${tokenAccess.access}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(res => {
+            if (res.status == 200) {
+                mail.style.display = 'block'
+                mail.style.color = '#039855'
+                mail.innerHTML = 'Profile updated successfully'
+                handleGetUser();
+                setTimeout(() => {
+                    mail.style.display = 'none'
+                }, 3000);
+            }
+            return res.json()
+        }).then(data => {
+            data
+        }).catch(error => console.log(error));
+    } else if (!isEmailValid(document.querySelector('#p-email').value)) {
+        mail.style.display = 'block'
+        mail.style.color = '#ED4A1F'
+        mail.innerHTML = 'Email is not valid'
+    } else {
+        profileInput.forEach(input => {
+            if (input.value === "") {
+                input.parentElement.classList.add('show-error')
+            }
+            input.addEventListener('change', () => {
+                input.parentElement.classList.remove('show-error')
+                profileEmail.forEach(input => {
+                    input.style.border = '1px solid #BABABA'
+                })
+            })
+        })
+    }
+})
+
+const passForm = document.querySelector('.password-form');
+const passInput = document.querySelectorAll('.pass-input');
+passForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const pass = document.querySelector('#password').value;
+    const confirmPass = document.querySelector('#confirm-password').value;
+    if (pass != "" && confirmPass != "") {
+        const formData = new FormData(passForm);
+        const data = Object.fromEntries(formData);
+
+        fetch(`${baseUrl}/users/${tokenAccess.id}/change-password/`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${tokenAccess.access}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(res => {
+            console.log(res)
+            if (!res.ok) {
+                document.querySelector('.old-pass').style.display = 'block'
+                document.querySelector('.old-pass').innerHTML = 'Old password is incorrect'
+            } else {
+                document.querySelector('.new-pass').style.display = 'block'
+                document.querySelector('.new-pass').style.color = '#039855'
+                document.querySelector('.old-pass').style.display = 'none'
+                document.querySelector('.new-pass').innerHTML = 'Password changed successfully'
+                passForm.reset();
+            }
+            return res.json()
+        }).then(data => {}).catch(error => console.log(error));
+    } else {
+        passInput.forEach(input => {
+            if (input.value === "") {
+                input.parentElement.classList.add('show-error')
+            }
+            input.addEventListener('change', () => {
+                input.parentElement.classList.remove('show-error')
+                document.querySelector('.old-pass').style.display = 'none'
+            })
+        })
+    }
+})
+
+// Delete Account
+const deleteForm = document.querySelector('.delete-form');
+const deleteError = document.querySelector('.delete-error');
+deleteForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const deletePassword = document.querySelector('.delete-password');
+    if (deletePassword.value !== "") {
+        fetch(`${baseUrl}/users/${tokenAccess.id}/check-password`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${tokenAccess.access}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                password: deletePassword.value
+            })
+        }).then(res => {
+            console.log(res);
+            if (!res.ok) {
+                deleteError.style.display = 'block'
+                deleteError.innerHTML = 'Password is incorrect'
+            } else {
+                fetch(`${baseUrl}/users/${tokenAccess.id}/delete-profile/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${tokenAccess.access}`
+                    }
+                }).then(res => {
+                    if (res.ok) {
+                        deleteError.innerHTML = 'Account deleted successfully'
+                        deleteError.style.color = '#039855'
+                        deleteError.style.display = 'inline-block';
+                        localStorage.clear();
+                    } else {
+
+                    }
+                    return res.json();
+                }).then(data => {
+                    data;
+                }).catch(error => console.log(error));
+            }
+            return res.json()
+        }).then(data => {
+            console.log(data);
+        }).catch(error => console.log(error));
+    } else {
+        deleteError.style.display = 'inline-block';
+        deletePassword.addEventListener('change', () => {
+            deleteError.style.display = 'none';
+        })
+    }
+})
+
+const toggleDeleteModal = document.querySelectorAll('.toggle-delete');
+const deleteModal = document.querySelector('.delete-wrapper');
+toggleDeleteModal.forEach(btn => {
+    btn.addEventListener('click', () => {
+        deleteModal.classList.toggle('show-delete')
+        deleteError.style.display = 'none';
+        deleteForm.reset();
+        location.reload();
     })
 })
