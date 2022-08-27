@@ -40,6 +40,7 @@ const input = document.querySelector('.form-input');
     input.addEventListener('change', () => {
         input.nextElementSibling.style.display = 'none';
         input.style.borderColor = '#BABABA';
+        incorrectText.innerHTML = 'Email cannot be blank';
     })
 
 function validateForm() {

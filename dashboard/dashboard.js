@@ -1272,7 +1272,7 @@ passForm.addEventListener('submit', (e) => {
                 passForm.reset();
             }
             return res.json()
-        }).then(data => {}).catch(error => console.log(error));
+        }).then(data => data).catch(error => console.log(error));
     } else {
         passInput.forEach(input => {
             if (input.value === "") {
@@ -1281,6 +1281,7 @@ passForm.addEventListener('submit', (e) => {
             input.addEventListener('change', () => {
                 input.parentElement.classList.remove('show-error')
                 document.querySelector('.old-pass').style.display = 'none'
+                document.querySelector('.old-pass').innerHTML = 'This field is required'
             })
         })
     }
@@ -1303,9 +1304,9 @@ deleteForm.addEventListener('submit', (e) => {
                 password: deletePassword.value
             })
         }).then(res => {
-            console.log(res);
             if (!res.ok) {
                 deleteError.style.display = 'block'
+            deletePassword.style.borderColor = "#ED4A1F"
                 deleteError.innerHTML = 'Password is incorrect'
             } else {
                 fetch(`${baseUrl}/users/${tokenAccess.id}/delete-profile/`, {
@@ -1319,22 +1320,19 @@ deleteForm.addEventListener('submit', (e) => {
                         deleteError.style.color = '#039855'
                         deleteError.style.display = 'inline-block';
                         localStorage.clear();
-                    } else {
-
-                    }
+                    } else {}
                     return res.json();
                 }).then(data => {
                     data;
                 }).catch(error => console.log(error));
             }
             return res.json()
-        }).then(data => {
-            console.log(data);
-        }).catch(error => console.log(error));
+        }).then(data => data).catch(error => console.log(error));
     } else {
         deleteError.style.display = 'inline-block';
         deletePassword.addEventListener('change', () => {
             deleteError.style.display = 'none';
+            deletePassword.style.borderColor = "#BABABA"
         })
     }
 })
@@ -1347,7 +1345,9 @@ toggleDeleteModal.forEach(btn => {
         deleteError.style.display = 'none';
         deleteForm.reset();
         if (!deleteModal.classList.contains('show-delete')) {
-            location.reload();
+            if (!localStorage.getItem('credentials')) {
+                window.location.href = 'https://abshaibu.github.io/test-P71/login.html'
+            }
         } else {}
     })
 })
@@ -1356,7 +1356,6 @@ toggleDeleteModal.forEach(btn => {
 const firstName = document.querySelector('#fname');
 const lastName = document.querySelector('#lname');
 const email = document.querySelector('#p-email');
-
 function validateProfileForm() {
     let firstnameValid = checkFirstName()
     let lastnameValid = checkLastName()
@@ -1377,6 +1376,7 @@ const checkFirstName = () => {
     }
     return valid
 }
+
 const checkLastName = () => {
     let valid = false
     if (isRequired(lastName.value.trim())) {
@@ -1389,6 +1389,7 @@ const checkLastName = () => {
     }
     return valid
 }
+
 const checkEmail = () => {
     let valid = false;
     if (isRequired(email.value) === false && isEmailValid(email.value)) {

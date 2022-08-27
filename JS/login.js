@@ -68,6 +68,8 @@ inputs.forEach(input => {
     input.addEventListener('change', () => {
         input.nextElementSibling.style.display = 'none';
         input.style.borderColor = '#BABABA';
+        document.querySelector('.mail').innerHTML = 'Email cannot be blank';
+        incorrectText.innerHTML = 'Password cannot be blank';
     })
 })
 
@@ -100,7 +102,7 @@ const checkEmail = () => {
         valid = true;
     } else if (isRequired(email.value) === false && isEmailValid(email.value) === false) {
         email.nextElementSibling.style.display = 'flex';
-        email.nextElementSibling.innerHTML = 'Email is not valid';
+        document.querySelector('.mail').innerHTML = 'Email is not valid';
         email.style.borderColor = '#ED4A1F';
     } else {
         email.nextElementSibling.style.display = 'flex';
