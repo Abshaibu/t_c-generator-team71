@@ -27,49 +27,95 @@ xIcon.addEventListener('click', () => {
 const validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 form.addEventListener('submit', (e) => {
     e.preventDefault();
+    validateForm();
+    console.log(validateForm());
+    
+    if (validateForm() === true) { 
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData);
+        fetch(`${baseUrl}/users/obtain-token/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(res => {
+            if (res.status === 201) {
+                window.location.href = 'https://abshaibu.github.io/test-P71/dashboard/dashboard.html'
+                // window.location.href = 'http://127.0.0.1:5500/dashboard/dashboard.html';
+            } else {
+                incorrect.style.display = 'flex';
+                incorrectText.innerHTML = 'Incorrect email or password';
+            }
+            return res.json();
+        }).then(data => {
+            authToken = {
+                refresh: data.tokens.refresh,
+                access: data.tokens.access,
+                id: data.id
+            }
+            localStorage.setItem('credentials', JSON.stringify(authToken));
+            return authToken;
+        }).then({
 
-    if (email.value === '' && inputType.value === '') {
-        errMsg.forEach(err => { 
-            err.style.display = 'flex'
-        })
-    } else if (email.value === '') {
-        form.classList.add('error1')
-    } else if (inputType.value === '') {
-        form.classList.add('error2')
-    } else if (email.value.match(validRegex)) {
-
-        if (!email.value.match(validRegex)) {
-            errEmail.style.display = 'flex';
-            incorrectText.innerHTML = 'Please enter a valid email';
-        }
-    }
-const formData = new FormData(form);
-    const data = Object.fromEntries(formData);
-    fetch(`${baseUrl}/users/obtain-token/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    }).then(res => {
-        if (res.status === 201) {
-            window.location.href = 'https://abshaibu.github.io/test-P71/dashboard/dashboard.html'
-            // window.location.href = 'http://127.0.0.1:5500/dashboard/dashboard.html';
-        } else {
-            incorrect.style.display = 'flex';
-            incorrectText.innerHTML = 'Incorrect email or password';
-        }
-        return res.json();
-    }).then(data => {
-        authToken = {
-            refresh: data.tokens.refresh,
-            access: data.tokens.access,
-            id: data.id
-        }
-        localStorage.setItem('credentials', JSON.stringify(authToken));
-        return authToken;
-    }).then({
-
-    }).catch(error => console.log(error));
-
+        }).catch(error => console.log(error));
+    } else {}
 })
+
+// Validate Form
+const inputs = document.querySelectorAll('.form-input');
+inputs.forEach(input => { 
+    input.addEventListener('change', () => {
+        input.nextElementSibling.style.display = 'none';
+        input.style.borderColor = '#BABABA';
+    })
+})
+
+function validateForm() {
+    let emailValid = checkEmail();
+    let passwordValid = checkPassword()
+    let formValid = emailValid && passwordValid;
+    return formValid;
+}
+
+// Check if input field is empty
+const isRequired = (value) => {
+    if (value.trimStart() === '') {
+        return true
+    } else {
+        return false
+    }
+}
+
+// Check that email is valid
+const isEmailValid = (email) => {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+};
+
+// check 
+const checkEmail = () => {
+    let valid = false;
+    if (isRequired(email.value) === false && isEmailValid(email.value)) {
+        valid = true;
+    } else if (isRequired(email.value) === false && isEmailValid(email.value) === false) {
+        email.nextElementSibling.style.display = 'flex';
+        email.nextElementSibling.innerHTML = 'Email is not valid';
+        email.style.borderColor = '#ED4A1F';
+    } else {
+        email.nextElementSibling.style.display = 'flex';
+        email.style.borderColor = '#ED4A1F';
+    }
+    return valid
+}
+
+const checkPassword = () => {
+    let valid = false;
+    if (isRequired(inputType.value)) {
+        inputType.nextElementSibling.style.display = 'flex';
+        inputType.style.borderColor = '#ED4A1F';
+    } else {
+        valid = true;
+    }
+    return valid
+}

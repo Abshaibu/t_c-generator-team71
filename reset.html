@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="./dashboard/green-square.svg">
     <link rel="stylesheet" href="./CSS/reset.css">
     <title>Create New Password | TermBuddy</title>
 </head>
@@ -44,7 +45,7 @@
                             <img class="input-icon eye-off" src="./images/eye-slash.svg"
                                 alt="an icon of an eye with a slash on it">
                         </label>
-                        <input type="password" name="password" id="password" placeholder="*******">
+                        <input type="password" name="password" id="password" placeholder="*******" class="form-input">
                         <p class="error-message incorrect">
                             <span class="error-icon">
                                 <img src="./images/x-icon.svg" alt="an x icon">
@@ -54,8 +55,8 @@
                             </span>
                         </p>
                         <div>
-                            <p class="success">Your passsword has been reset. Please login</p>
-                            <span class="success-close">x</span>
+                            <p class="success">Your passsword has been reset. Please login <span
+                                    class="success-close">x</span></p>
                         </div>
                         <input type="submit" value="Create Passsword">
                     </form>

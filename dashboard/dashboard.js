@@ -250,15 +250,13 @@ const isEmailValid = (email) => {
 };
 
 const isPhoneValid = (phone) => {
-    // const re = /^[0-9]{10}$/;
-    // return re.test(phone);
-    console.log(phone);
+    const re = /^(\+\d{1,3}[- ]?)?\d{10}$/;
+    return re.test(phone);
 }
 
 const isUrlValid = (url) => {
     const expression = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/gm;
     return expression.test(url);
-    // const regex = new RegExp(expression);
 }
 
 const checkBusinessName = (value) => {
@@ -315,16 +313,16 @@ const checkBusinessPhone = (value) => {
     let valid = false;
     const phone = document.querySelector(value);
     const phoneMessage = document.querySelectorAll('.phone');
-    if (isRequired(phone.value) === true) {
-        phone.style.borderColor = '#ED4A1F';
-        phoneMessage.forEach(message => {
-            message.style.color = '#ED4A1F';
-        })
-    } else {
+    if (isRequired(phone.value) === false && isPhoneValid(phone.value)) {
         phone.style.borderColor = '#039855';
         phoneMessage.forEach(message => {
             message.style.color = '#039855';
             valid = true;
+        })
+    } else {
+        phone.style.borderColor = '#ED4A1F';
+        phoneMessage.forEach(message => {
+            message.style.color = '#ED4A1F';
         })
     }
     return valid
@@ -450,10 +448,6 @@ const preview = `
         `;
 
 // Preview After Save Template
-{/* <button class="preview-btn preview-save add-one" onclick="handleAdd()">
-    <img src="folder-add.svg" alt="folder icon">
-        Save
-</button> */}
 let oPreview;
 const previewAfter = `
        <div class="show-preview">
@@ -462,7 +456,10 @@ const previewAfter = `
             <div class="inner-preview open-preview">     
             </div>
             <div class="preview-ctas">
-            
+            <button class="preview-btn preview-save add-one" onclick="handleAddThree()">
+    <img src="folder-add.svg" alt="folder icon">
+        Save
+</button>
                 <div>
                     <button class="preview-btn preview-more" onclick="showMore()">
                         <img src="more.svg" alt="3 black dots  icon stacked on eachother">
@@ -788,6 +785,34 @@ function handleAddTwo() {
     }).catch(error => console.log(error));
 }
 
+function handleAddThree() {
+    const access = tokenAccess.access;
+    let category;
+    let localData = JSON.parse(localStorage.getItem('draft'));
+    if (localData.name === 'terms') {
+        category = 'terms-and-conditions';
+    } else {
+        category = 'privacy-policies';
+    }
+    delete localData.name;
+    fetch(`${baseUrl}/${category}/${localData.id}/update/`, {
+        method: 'PUT',
+        headers: {
+            "Content-Type": 'application/json',
+            "Authorization": `Bearer ${access}`
+        },
+        body: JSON.stringify(localData)
+    }).then(res => {
+        if (!res.ok) {
+            throw new Error(res.statusText)
+        } else {
+            handleDisplay();
+            location.reload();
+        }
+        return res.json()
+    }).then(data => data).catch(error => console.log(error));
+}
+
 // More Options Modal
 function showMore() {
     const moreOptions = document.querySelector('.more');
@@ -1096,6 +1121,7 @@ function openPreview(docId, docName) {
         return res.json()
     }).then(data => {
         let mutateData = data;
+        let draftId = mutateData.id;
         delete mutateData.permanent;
         delete mutateData.user_id;
         delete mutateData.id;
@@ -1106,14 +1132,24 @@ function openPreview(docId, docName) {
             termsObj = mutateData
             downloadObj = termsObj
             downloadObj.name = "terms"
+            let draft = downloadObj;
+            draft.permanent = true;
+            draft.id = draftId;
+            draft.name = "terms"
+            localStorage.setItem('draft', JSON.stringify(draft))
         } else {
             privacyObj = mutateData
             downloadObj = privacyObj
+            let draft = downloadObj;
+            draft.permanent = true;
+            draft.id = draftId;
+            draft.name = "privacy"
+            localStorage.setItem('draft', JSON.stringify(draft))
         }
+
+        delete mutateData.id;
         document.querySelector('.inner-preview').innerHTML = docName === "terms" ? generateTermsTemplate(mutateData) : generatePrivacyTemplate(mutateData);
     })
-    console.log(termsObj);
-    console.log(privacyObj);
 }
 
 // Deleting Individual Document
@@ -1176,8 +1212,9 @@ basicForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(basicForm);
     const data = Object.fromEntries(formData);
+    validateProfileForm();
 
-    if (data.first_name != "" && data.last_name != "" && data.email != "" && isEmailValid(document.querySelector('#p-email').value)) {
+    if (validateProfileForm() === true) {
         fetch(`${baseUrl}/users/${tokenAccess.id}/update-profile/`, {
             method: 'PUT',
             headers: {
@@ -1191,31 +1228,18 @@ basicForm.addEventListener('submit', (e) => {
                 mail.style.color = '#039855'
                 mail.innerHTML = 'Profile updated successfully'
                 handleGetUser();
-                setTimeout(() => {
-                    mail.style.display = 'none'
-                }, 3000);
             }
             return res.json()
         }).then(data => {
             data
         }).catch(error => console.log(error));
-    } else if (!isEmailValid(document.querySelector('#p-email').value)) {
-        mail.style.display = 'block'
-        mail.style.color = '#ED4A1F'
-        mail.innerHTML = 'Email is not valid'
-    } else {
+    } else {}
         profileInput.forEach(input => {
-            if (input.value === "") {
-                input.parentElement.classList.add('show-error')
-            }
             input.addEventListener('change', () => {
-                input.parentElement.classList.remove('show-error')
-                profileEmail.forEach(input => {
-                    input.style.border = '1px solid #BABABA'
-                })
+                input.style.borderColor = '#BABABA'
+                input.nextElementSibling.style.display = 'none'
             })
         })
-    }
 })
 
 const passForm = document.querySelector('.password-form');
@@ -1322,6 +1346,62 @@ toggleDeleteModal.forEach(btn => {
         deleteModal.classList.toggle('show-delete')
         deleteError.style.display = 'none';
         deleteForm.reset();
-        location.reload();
+        if (!deleteModal.classList.contains('show-delete')) {
+            location.reload();
+        } else {}
     })
 })
+
+// Validating Profile Details
+const firstName = document.querySelector('#fname');
+const lastName = document.querySelector('#lname');
+const email = document.querySelector('#p-email');
+
+function validateProfileForm() {
+    let firstnameValid = checkFirstName()
+    let lastnameValid = checkLastName()
+    let emailValid = checkEmail()
+    let formValid = firstnameValid && lastnameValid && emailValid
+    return formValid;
+}
+
+const checkFirstName = () => {
+    let valid = false
+    if (isRequired(firstName.value.trim())) {
+        firstName.nextElementSibling.style.display = 'block'
+        firstName.style.borderColor = '#ED4A1F'
+    } else {
+        firstName.nextElementSibling.style.display = 'none'
+        firstName.style.borderColor = '#039855'
+        valid = true
+    }
+    return valid
+}
+const checkLastName = () => {
+    let valid = false
+    if (isRequired(lastName.value.trim())) {
+        lastName.nextElementSibling.style.display = 'block'
+        lastName.style.borderColor = '#ED4A1F'
+    } else {
+        lastName.nextElementSibling.style.display = 'none'
+        lastName.style.borderColor = '#039855'
+        valid = true
+    }
+    return valid
+}
+const checkEmail = () => {
+    let valid = false;
+    if (isRequired(email.value) === false && isEmailValid(email.value)) {
+        email.style.borderColor = '#039855'
+        email.nextElementSibling.style.display = 'none'
+        valid = true;
+    } else if (isRequired(email.value) === false && isEmailValid(email.value) === false) {
+        email.nextElementSibling.innerHTML = 'Email is not valid'
+        email.nextElementSibling.style.display = 'block';
+        email.style.borderColor = '#ED4A1F';
+    } else {
+        email.nextElementSibling.style.display = 'block';
+        email.style.borderColor = '#ED4A1F';
+    }
+    return valid
+}
