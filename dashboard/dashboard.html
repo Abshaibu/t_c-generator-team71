@@ -35,23 +35,31 @@
                     <div class="tab-menu">
                         <ul>
                             <li>
-                                <a href="#" class="tab-a active-a" data-id="tab1">
+                                <a href="#" class="tab-a active-a"
+                                 data-id="tab1"
+                                 onclick="tabs(0)">
                                     <img src="home.svg" alt="home icon">
                                     <span>dashboard</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="tab-a" data-id="tab2">
+                                <a href="#" class="tab-a"
+                                 data-id="tab2"
+                                 onclick="tabs(1)">
                                     <img src="file.svg" alt="file icon"> <span>T&Cs</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="tab-a" data-id="tab3">
+                                <a href="#" class="tab-a" 
+                                data-id="tab3"
+                                onclick="tabs(2)">
                                     <img src="policy.svg" alt="file icon"> <span>privacy policy</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="tab-a" data-id="tab4">
+                                <a href="#" class="tab-a" 
+                                data-id="tab4"
+                                onclick="tabs(3)">
                                     <img src="user.svg" alt="user icon"> <span>profile</span>
                                 </a>
                             </li>
@@ -80,14 +88,14 @@
             </div>
             <div class="tab-content">
                 <!-- Dashboard Tab -->
-                <div class="tab tab-active" data-id="tab1">
+                <div class="tab tab-active" data-id="tab1" id="dashboard-tab">
                     <section class="wrapper preview-cons preview">
                     </section>
                 </div>
 
 
                 <!-- T&Cs Tab -->
-                <div class="tab" data-id="tab2">
+                <div class="tab" data-id="tab2" id="terms-tab">
                     <section class="wrapper preview-cons">
                         <div class="terms">
                             <h2>Drafts</h2>
@@ -107,7 +115,7 @@
 
 
                 <!-- Privacy Tab -->
-                <div class="tab" data-id="tab3">
+                <div class="tab" data-id="tab3" id="privacy-tab">
                     <section class="wrapper preview preview-cons">
                         <div class="terms">
                             <h2>Drafts</h2>
@@ -127,7 +135,7 @@
 
 
                 <!-- Profile Tab -->
-                <div class="tab" data-id="tab4">
+                <div class="tab" data-id="tab4" id="profile-tab">
                     <div class="profile-wrapper">
                         <div class="main-details">
                             <div class="profile-form">
@@ -237,7 +245,6 @@
                         </div>
                         <form action="" class="conditions-details">
                             <div class="terms-details">
-                                <small class="required">All input fields are required</small>
                                 <div>
                                     <label for="bizname">Business Name
                                         <img src="shop.svg" alt="shop icon">
@@ -271,7 +278,6 @@
                                 </div>
                             </div>
                             <div class="terms-features">
-                                <small class="required">All input fields are required</small>
                                 <div id="docu-name">
                                     <label for="docname">Document Name
                                         <img src="grey-file.svg" alt="shop icon">
@@ -483,6 +489,7 @@
     <!-- Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.debug.js"></script>
+    <script src="jquery.min.js"></script>
     <script src="dashboard.js"></script>
 
 </body>

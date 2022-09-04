@@ -329,37 +329,47 @@ const checkBusinessPhone = (value) => {
 }
 
 // Tabs Switcher
-$(document).ready(function () {
-    $('.tab-a').click(function () {
-        $(".tab").removeClass('tab-active');
-        $(".tab[data-id='" + $(this).attr('data-id') + "']").addClass("tab-active");
-        $(".tab-a").removeClass('active-a');
-        $(this).parent().find(".tab-a").addClass('active-a');
-        localStorage.setItem('activeTab', $(this).attr('data-id'));
-    });
-    let activeTab = localStorage.getItem('activeTab');
-    if (activeTab) {
-        $(".tab").removeClass('tab-active');
-        $(".tab[data-id='" + activeTab + "']").addClass("tab-active");
-        $(this).parent().find(".tab-a").addClass('active-a');
-    }
-});
+// $(document).ready(function () {
+//     $('.tab-a').click(function () {
+//         $(".tab").removeClass('tab-active');
+//         $(".tab[data-id='" + $(this).attr('data-id') + "']").addClass("tab-active");
+//         $(".tab-a").removeClass('active-a');
+//         $(this).parent().find(".tab-a").addClass('active-a');
+//         localStorage.setItem('activeTab', $(this).attr('data-id'));
+//     });
+//     let activeTab = localStorage.getItem('activeTab');
+//     if (activeTab) {
+//         $(".tab").removeClass('tab-active');
+//         $(".tab[data-id='" + activeTab + "']").addClass("tab-active");
+//         $(this).parent().find(".tab-a").addClass('active-a');
+//     }
+// });
 
-// const tabs = document.querySelectorAll('.tab-a')
-// const tabContents = document.querySelectorAll('.tab[data-id]')
-// tabs.forEach(tab => {
-//     tab.addEventListener('click', () => {
-//         const target = document.querySelector(tab.dataset.id)
-//         tabContents.forEach(tabContent => {
-//             tabContent.classList.remove('tab-active')
-//         })
-//         tabs.forEach(tab => {
-//             tab.classList.remove('active-a')
-//         })
-//         tab.classList.add('active-a')
-//         target.classList.add('tab-active')
-//     })
-// })
+$(function () {
+
+    $('a[data-id="tab1"]').click(function (event) {
+        localStorage.setItem("text", "tab-profile");
+    });
+
+    $('a[data-id="tab2"]').click(function (event) {
+        localStorage.setItem("text", "tab-deposit");
+    });
+
+    $('a[data-id="tab3"]').click(function (event) {
+        localStorage.setItem("text", "tab-withdrawal");
+    });
+
+    $('a[data-id="tab4"]').click(function (event) {
+        localStorage.setItem("text", "tab-chart");
+    });
+
+    // const path = window.location.pathname;
+    // const pathSub = path.substring(path.lastIndexOf("/") + 1, path.length)
+
+    // if (pathSub == "settings.html") {
+    //     document.getElementById(localStorage.getItem('text')).click();
+    // }
+});
 
 // Main Dashboard Content
 const mainContent = `
@@ -963,15 +973,15 @@ function logOut() {
 }
 
 // Window Loads Get Certain data
-window.addEventListener('load', () => {
-    if (tokenAccess) {
-        handleDisplay();
-        handleGetUser();
-    } else {
-        // window.location.href = 'http://127.0.0.1:5500/login.html'
-        window.location.href = 'https://abshaibu.github.io/test-P71/login.html'
-    }
-})
+// window.addEventListener('load', () => {
+//     if (tokenAccess) {
+//         handleDisplay();
+//         handleGetUser();
+//     } else {
+//         // window.location.href = 'http://127.0.0.1:5500/login.html'
+//         window.location.href = 'https://abshaibu.github.io/test-P71/login.html'
+//     }
+// })
 
 // Get user details
 function handleGetUser() {
@@ -1000,7 +1010,6 @@ const pWrapper = document.querySelectorAll('.privacy-wrapper')
 const tWrapper = document.querySelectorAll('.terms-wrapper')
 const termsDraft = document.querySelector('.terms-draft')
 const privacyDraft = document.querySelector('.privacy-draft')
-
 function handleDisplay() {
     let tokenAccess = JSON.parse(localStorage.getItem('credentials'))
     fetch(`${baseUrl}/users/${tokenAccess.id}/documents`, {

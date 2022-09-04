@@ -185,6 +185,8 @@ aside.sidebar-collapsed {
     border: 0;
     display: block;
     z-index: 2;
+    transform: rotate(-180deg);
+    transition: all 0.25s linear;
 }
 
 .sidebar-collapsed {
@@ -197,6 +199,10 @@ aside.sidebar-collapsed {
 
 .sidebar-collapsed p {
     display: block;
+}
+
+.sidebar-collapsed .sidebar-expander {
+    transform: rotate(0deg);
 }
 
 /* Main Content */
