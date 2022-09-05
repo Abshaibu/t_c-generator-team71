@@ -582,7 +582,7 @@ input:focus, textarea:focus {
 
 form img {
     position: absolute;
-    top: 15px;
+    top: 13px;
     left: 17px;
     z-index: 2;
 }

@@ -190,7 +190,7 @@ switchForms.forEach(swap => {
     const emailMessage = document.querySelectorAll('.email');
     const modalInput = document.querySelectorAll('.modal-form');
     modalInput.forEach(input => {
-        input.addEventListener('change', () => {
+        input.addEventListener('blur', () => {
             input.style.borderColor = "#BABABA";
             emailMessage.forEach(message => {
                 message.style.display = 'none';
@@ -200,7 +200,7 @@ switchForms.forEach(swap => {
 
     const modalInputTwo = document.querySelectorAll('.modal-form2');
     modalInputTwo.forEach(input => {
-        input.addEventListener('change', () => {
+        input.addEventListener('blur', () => {
             input.style.borderColor = "#BABABA";
             emailMessage.forEach(message => {
                 message.style.display = 'none';
@@ -329,47 +329,47 @@ const checkBusinessPhone = (value) => {
 }
 
 // Tabs Switcher
-// $(document).ready(function () {
-//     $('.tab-a').click(function () {
-//         $(".tab").removeClass('tab-active');
-//         $(".tab[data-id='" + $(this).attr('data-id') + "']").addClass("tab-active");
-//         $(".tab-a").removeClass('active-a');
-//         $(this).parent().find(".tab-a").addClass('active-a');
-//         localStorage.setItem('activeTab', $(this).attr('data-id'));
-//     });
-//     let activeTab = localStorage.getItem('activeTab');
-//     if (activeTab) {
-//         $(".tab").removeClass('tab-active');
-//         $(".tab[data-id='" + activeTab + "']").addClass("tab-active");
-//         $(this).parent().find(".tab-a").addClass('active-a');
-//     }
-// });
-
-$(function () {
-
-    $('a[data-id="tab1"]').click(function (event) {
-        localStorage.setItem("text", "tab-profile");
+$(document).ready(function () {
+    $('.tab-a').click(function () {
+        $(".tab").removeClass('tab-active');
+        $(".tab[data-id='" + $(this).attr('data-id') + "']").addClass("tab-active");
+        $(".tab-a").removeClass('active-a');
+        $(this).parent().find(".tab-a").addClass('active-a');
+        localStorage.setItem('activeTab', $(this).attr('data-id'));
     });
-
-    $('a[data-id="tab2"]').click(function (event) {
-        localStorage.setItem("text", "tab-deposit");
-    });
-
-    $('a[data-id="tab3"]').click(function (event) {
-        localStorage.setItem("text", "tab-withdrawal");
-    });
-
-    $('a[data-id="tab4"]').click(function (event) {
-        localStorage.setItem("text", "tab-chart");
-    });
-
-    // const path = window.location.pathname;
-    // const pathSub = path.substring(path.lastIndexOf("/") + 1, path.length)
-
-    // if (pathSub == "settings.html") {
-    //     document.getElementById(localStorage.getItem('text')).click();
-    // }
+    let activeTab = localStorage.getItem('activeTab');
+    if (activeTab) {
+        $(".tab").removeClass('tab-active');
+        $(".tab[data-id='" + activeTab + "']").addClass("tab-active");
+        $(this).parent().find(".tab-a").addClass('active-a');
+    }
 });
+
+// $(function () {
+
+//     $('a[data-id="tab1"]').click(function (event) {
+//         localStorage.setItem("text", "tab-profile");
+//     });
+
+//     $('a[data-id="tab2"]').click(function (event) {
+//         localStorage.setItem("text", "tab-deposit");
+//     });
+
+//     $('a[data-id="tab3"]').click(function (event) {
+//         localStorage.setItem("text", "tab-withdrawal");
+//     });
+
+//     $('a[data-id="tab4"]').click(function (event) {
+//         localStorage.setItem("text", "tab-chart");
+//     });
+
+//     // const path = window.location.pathname;
+//     // const pathSub = path.substring(path.lastIndexOf("/") + 1, path.length)
+
+//     // if (pathSub == "settings.html") {
+//     //     document.getElementById(localStorage.getItem('text')).click();
+//     // }
+// });
 
 // Main Dashboard Content
 const mainContent = `
@@ -1244,7 +1244,7 @@ basicForm.addEventListener('submit', (e) => {
         }).catch(error => console.log(error));
     } else {}
         profileInput.forEach(input => {
-            input.addEventListener('change', () => {
+            input.addEventListener('blur', () => {
                 input.style.borderColor = '#BABABA'
                 input.nextElementSibling.style.display = 'none'
             })
@@ -1287,7 +1287,7 @@ passForm.addEventListener('submit', (e) => {
             if (input.value === "") {
                 input.parentElement.classList.add('show-error')
             }
-            input.addEventListener('change', () => {
+            input.addEventListener('blur', () => {
                 input.parentElement.classList.remove('show-error')
                 document.querySelector('.old-pass').style.display = 'none'
                 document.querySelector('.old-pass').innerHTML = 'This field is required'
@@ -1339,7 +1339,7 @@ deleteForm.addEventListener('submit', (e) => {
         }).then(data => data).catch(error => console.log(error));
     } else {
         deleteError.style.display = 'inline-block';
-        deletePassword.addEventListener('change', () => {
+        deletePassword.addEventListener('blur', () => {
             deleteError.style.display = 'none';
             deletePassword.style.borderColor = "#BABABA"
         })
@@ -1351,6 +1351,7 @@ const deleteModal = document.querySelector('.delete-wrapper');
 toggleDeleteModal.forEach(btn => {
     btn.addEventListener('click', () => {
         deleteModal.classList.toggle('show-delete')
+        body.setAttribute('tabindex', '-1');
         deleteError.style.display = 'none';
         deleteForm.reset();
         if (!deleteModal.classList.contains('show-delete')) {

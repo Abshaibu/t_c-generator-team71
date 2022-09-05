@@ -329,7 +329,7 @@ button {
     position: absolute;
     width: var(--place-icon-size);
     left: 1rem;
-    top: .7rem;
+    top: .8rem;
 }
 
 .oth {
