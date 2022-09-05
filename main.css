@@ -374,8 +374,24 @@ h1 {
 }
 
 /* FAQ's Section */
+.faq-content {
+    background: #FEFEFE;
+    border-radius: .5rem;
+    margin-bottom: 1rem;
+    padding: 1rem 3.5rem 1rem 2rem;
+}
+
+
+
 .faqs {
     padding: 2rem 0;
+}
+
+.faqs p {
+    margin-top: 1rem;
+    height: 0;
+    opacity: 0;
+    transition: all 0.25s linear;
 }
 
 .faqs h3 {
@@ -391,6 +407,7 @@ h1 {
 .faq {
     background: #FEFEFE;
     height: 52px;
+    display: none;
     overflow: hidden;
     padding: 0 1.5rem 1rem;
     margin-bottom: 1rem;
@@ -398,25 +415,16 @@ h1 {
     transition: all 0.35s linear;
 }
 
-.open {
-    height: 130px;
-}
-
-.set-height {
-    height: auto;
-}
-
-.faq .faq-btn {
+button.faq-btn {
     font-size: 1.25rem;
     text-align: left;
-    padding: .7rem 0;
-    margin-bottom: .5rem;
+    padding: 0;
 }
 
 .faq-btn img {
     position: absolute;
-    right: 0;
-    bottom: 7px;
+    right: -33px;
+    top: -2px;
     transition: all 0.3s linear;
     pointer-events: none;
 }
@@ -427,6 +435,12 @@ h1 {
 
 .open img {
     transform: rotate(-180deg);
+}
+
+.open p {
+    /* display: block; */
+    height: auto;
+    opacity: 1;
 }
 
 /* How it works */

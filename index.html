@@ -237,15 +237,15 @@
             <div class="container faqs">
                 <h3>Frequently Asked Questions</h3>
                 <div class="faq-wrapper">
-                    <div class="faq">
-                        <button class="faq-btn">Why do companies need a privacy policy? <img
+                    <div class="faq-content">
+                        <button class="faq-btn">Why do companies need a privacy policy? what is it uou realjy want <img
                                 src="./images/arrow-down.svg" alt="a down arrow icon"></button>
                         <p>Companies need a privacy policy because most countries have laws requiring privacy policies
                             for websites and applications that gather personal data from users; businesses have them.
                         </p>
                     </div>
 
-                    <div class="faq">
+                    <div class="faq-content">
                         <button class="faq-btn">What should my privacy policy say? <img src="./images/arrow-down.svg"
                                 alt="a down arrow icon"></button>
                         <p>Companies need a privacy policy because most countries have laws requiring privacy policies
@@ -253,7 +253,7 @@
                         </p>
                     </div>
 
-                    <div class="faq">
+                    <div class="faq-content">
                         <button class="faq-btn">What are the requirements to get my Policies? <img
                                 src="./images/arrow-down.svg" alt="a down arrow icon"></button>
                         <p>Companies need a privacy policy because most countries have laws requiring privacy policies
@@ -261,7 +261,7 @@
                         </p>
                     </div>
 
-                    <div class="faq">
+                    <div class="faq-content">
                         <button class="faq-btn">Can I download the document created by the Terms and Conditions
                             Generator? <img src="./images/arrow-down.svg" alt="a down arrow icon"></button>
                         <p>Companies need a privacy policy because most countries have laws requiring privacy policies
@@ -269,7 +269,7 @@
                         </p>
                     </div>
 
-                    <div class="faq">
+                    <div class="faq-content">
                         <button class="faq-btn">What are the Terms and Conditions Agreement? <img
                                 src="./images/arrow-down.svg" alt="a down arrow icon"></button>
                         <p>Companies need a privacy policy because most countries have laws requiring privacy policies
@@ -277,7 +277,7 @@
                         </p>
                     </div>
 
-                    <div class="faq">
+                    <div class="faq-content">
                         <button class="faq-btn">Where should I place my Terms and Conditions agreement? <img
                                 src="./images/arrow-down.svg" alt="a down arrow icon"></button>
                         <p>Companies need a privacy policy because most countries have laws requiring privacy policies
@@ -456,18 +456,7 @@
 
     <script>
         document.querySelectorAll('.faq-btn').forEach(faq => faq.addEventListener('click', (e) => {
-            if (e.target.parentElement.classList.contains('set-height')) {
-                e.target.parentElement.classList.remove('set-height');
                 e.target.parentElement.classList.toggle('open');
-            } else {
-                e.target.parentElement.classList.toggle('open');
-            }
-        }))
-
-        document.querySelectorAll('.faq-btn').forEach(faq => faq.addEventListener('transitionend', (e) => {
-            if (e.target.parentElement.classList.contains('open')) {
-                e.target.parentElement.classList.add('set-height')
-            }
         }))
 
         document.querySelectorAll('.mobile-nav a').forEach(link => link.addEventListener('click', (e) => {
