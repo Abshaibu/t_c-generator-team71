@@ -1,12 +1,17 @@
 const form = document.getElementById('form');
+
 const incorrect = document.querySelector('.error-message');
+const spinner = document.querySelector('.spinner-wrapper');
+const forgotBtn = document.querySelector('.forgot-submit');
 const incorrectText = document.querySelector('.incorrect-text');
 const email = document.getElementById('email');
 form.addEventListener('submit', e => {
     e.preventDefault();
     validateForm();
 
-        if (validateForm() === true) {
+    if (validateForm() === true) {
+        spinner.style.display = 'flex';
+        forgotBtn.style.color = '#2B7A78';
             const formData = new FormData(form);
             const data = Object.fromEntries(formData);
 
@@ -18,9 +23,13 @@ form.addEventListener('submit', e => {
                 body: JSON.stringify(data)
             }).then(res => {
                 if (res.status === 400) {
+                    spinner.style.display = 'none';
+                    forgotBtn.style.color = '#FEFEFE';
                     email.nextElementSibling.style.display = 'flex';
                     incorrectText.innerHTML = 'Email is not registered';
                 } else {
+                    spinner.style.display = 'none';
+                    forgotBtn.style.color = '#FEFEFE';
                     document.querySelector('.success').style.display = 'block';
                     form.reset();
                 }
@@ -37,7 +46,7 @@ document.querySelector('.success-close').addEventListener('click', () => {
 
 // Validate Form
 const input = document.querySelector('.form-input');
-    input.addEventListener('change', () => {
+    input.addEventListener('blur', () => {
         input.nextElementSibling.style.display = 'none';
         input.style.borderColor = '#BABABA';
         incorrectText.innerHTML = 'Email cannot be blank';

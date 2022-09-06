@@ -35,31 +35,23 @@
                     <div class="tab-menu">
                         <ul>
                             <li>
-                                <a href="#" class="tab-a active-a"
-                                 data-id="tab1"
-                                 onclick="tabs(0)">
+                                <a href="#" class="tab-a active-a" data-id="tab1" onclick="tabs(0)">
                                     <img src="home.svg" alt="home icon">
                                     <span>dashboard</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="tab-a"
-                                 data-id="tab2"
-                                 onclick="tabs(1)">
+                                <a href="#" class="tab-a" data-id="tab2" onclick="tabs(1)">
                                     <img src="file.svg" alt="file icon"> <span>T&Cs</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="tab-a" 
-                                data-id="tab3"
-                                onclick="tabs(2)">
+                                <a href="#" class="tab-a" data-id="tab3" onclick="tabs(2)">
                                     <img src="policy.svg" alt="file icon"> <span>privacy policy</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="tab-a" 
-                                data-id="tab4"
-                                onclick="tabs(3)">
+                                <a href="#" class="tab-a" data-id="tab4" onclick="tabs(3)">
                                     <img src="user.svg" alt="user icon"> <span>profile</span>
                                 </a>
                             </li>
@@ -120,7 +112,7 @@
                         <div class="terms">
                             <h2>Drafts</h2>
                             <div class="drafts privacy-draft">
-                                <p class="draft-p">No drafts created</p> 
+                                <p class="draft-p">No drafts created</p>
                             </div>
                         </div>
                         <div class="privacy">
@@ -150,25 +142,31 @@
                                         <label for="fname">
                                             <p>First name</p>
                                         </label>
-                                        <input type="text" name="first_name" placeholder="First name" id="fname" class="profile-input">
+                                        <input type="text" name="first_name" placeholder="First name" id="fname"
+                                            class="profile-input">
                                         <small class="pr-error">This field is required</small>
                                     </div>
                                     <div>
                                         <label for="lname">
                                             <p>Last name</p>
                                         </label>
-                                        <input type="text" name="last_name" id="lname" placeholder="Last name" class="profile-input">
+                                        <input type="text" name="last_name" id="lname" placeholder="Last name"
+                                            class="profile-input">
                                         <small class="pr-error">This field is required</small>
                                     </div>
                                     <div>
                                         <label for="p-email">
                                             <p>Email</p>
                                         </label>
-                                        <input type="email" id="p-email" name="email" placeholder="Email" class="profile-input profile-email">
+                                        <input type="email" id="p-email" name="email" placeholder="Email"
+                                            class="profile-input profile-email">
                                         <small class="pr-error mail">This field is required</small>
                                     </div>
                                     <button type="submit">
-                                        <img src="edit-2.svg" alt="a pen icon">
+                                        <div class="spinner-wrapper">
+                                            <div class="spinner"></div>
+                                        </div>
+                                        <img src="save.svg" alt="a disk icon">
                                         Save
                                     </button>
                                 </form>
@@ -179,7 +177,8 @@
                                         <label for="password">
                                             <p>Password</p>
                                         </label>
-                                        <input type="password" id="password" name="password" placeholder="Old password" class="pass-input">
+                                        <input type="password" id="password" name="password" placeholder="Old password"
+                                            class="pass-input">
                                         <small class="pr-error old-pass">This field is required</small>
                                     </div>
                                     <div>
@@ -188,10 +187,13 @@
                                         </label>
                                         <input type="password" id="confirm-password" name="new_password"
                                             placeholder="New password" class="pass-input">
-                                            <small class="pr-error new-pass">This field is required</small>
+                                        <small class="pr-error new-pass">This field is required</small>
                                     </div>
                                     <button type="submit" id="submit">
-                                        <img src="edit-2.svg" alt="a pen icon">
+                                        <div class="spinner-wrapper">
+                                            <div class="spinner"></div>
+                                        </div>
+                                        <img src="save.svg" alt="a disk icon">
                                         Save
                                     </button>
                                 </form>
@@ -250,14 +252,14 @@
                                         <img src="shop.svg" alt="shop icon">
                                     </label>
                                     <input type="text" name="business_name" id="bizname" placeholder="John Doe Limited"
-                                    class="modal-form">
+                                        class="modal-form">
                                 </div>
                                 <div>
                                     <label for="url">Website URL
                                         <img src="global.svg" alt="globe icon">
                                     </label>
                                     <input type="text" name="business_url" id="url" placeholder="https://johndoe.com"
-                                    class="modal-form">
+                                        class="modal-form">
                                     <small class="url">URL format must be https://johndoe.com and unique</small>
                                 </div>
                                 <div>
@@ -265,7 +267,7 @@
                                         <img src="input-email.svg" alt="envelope icon">
                                     </label>
                                     <input type="email" name="contact_email" id="email" placeholder="johndoe@gmail.com"
-                                    class="modal-form">
+                                        class="modal-form">
                                     <small class="email">Email is not valid</small>
                                 </div>
                                 <div>
@@ -273,7 +275,7 @@
                                         <img src="call.svg" alt="phone icon">
                                     </label>
                                     <input type="text" name="contact_phone" id="phone" placeholder="+234 812 657 9745"
-                                    class="modal-form">
+                                        class="modal-form">
                                     <small class="phone">phone format must be +234XXXXXXXXXX</small>
                                 </div>
                             </div>
@@ -284,7 +286,7 @@
                                     </label>
                                     <input type="text" name="document_name" id="docname"
                                         placeholder="Awesome name goes here">
-                                        <small class="docname-error">Field is required</small>
+                                    <small class="docname-error">Field is required</small>
                                 </div>
                                 <div>
                                     <input type="checkbox" name="cookies" id="cookies">
@@ -322,6 +324,9 @@
                                     <img src="arrow-circle-right.svg" alt="right arrow icon">
                                 </button>
                                 <button type="submit" class="proceed submit-btn">
+                                    <div class="spinner-wrapper">
+                                        <div class="spinner"></div>
+                                    </div>
                                     Proceed
                                     <img src="arrow-circle-right.svg" alt="right arrow icon">
                                 </button>
@@ -377,7 +382,7 @@
                                     </label>
                                     <input type="email" name="contact_email" id="memail" placeholder="johndoe@gmail.com"
                                         class="modal-form2">
-                                        <small class="email">Email is not valid</small>
+                                    <small class="email">Email is not valid</small>
                                 </div>
                                 <div>
                                     <label for="mphone">Phone
@@ -396,7 +401,7 @@
                                     </label>
                                     <input type="text" name="document_name" id="mdocname"
                                         placeholder="Awesome name goes here">
-                                        <small class="docname-error">Field is required</small>
+                                    <small class="docname-error">Field is required</small>
                                 </div>
                                 <div>
                                     <input type="checkbox" name="consent" id="mconsent">
@@ -444,6 +449,9 @@
                                     <img src="arrow-circle-right.svg" alt="right arrow icon">
                                 </button>
                                 <button type="submit" class="proceed submit-btn">
+                                    <div class="spinner-wrapper">
+                                        <div class="spinner"></div>
+                                    </div>
                                     Proceed
                                     <img src="arrow-circle-right.svg" alt="right arrow icon">
                                 </button>
@@ -470,10 +478,14 @@
                     <form action="" class="delete-form">
                         <div>
                             <small>Please enter your password to continue</small>
-                            <input type="password" name="password" placeholder="Enter your password" class="delete-password">
+                            <input type="password" name="password" placeholder="Enter your password"
+                                class="delete-password">
                             <small class="delete-error">This field is required</small>
                         </div>
                         <div>
+                            <div class="spinner-wrapper">
+                                <div class="spinner"></div>
+                            </div>
                             <input type="submit" value="I still wish to delete my account">
                         </div>
                     </form>

@@ -2,11 +2,13 @@ const form = document.querySelector('.form')
 const inputType = document.getElementById('password')
 const email = document.getElementById('email')
 const xIcon = document.querySelector('.eye-off')
+const signinBtn = document.querySelector('.signin-btn')
 const errMsg = document.querySelectorAll('.error-message')
 const errEmail = document.querySelector('.error-email')
 const errPassword = document.querySelector('.error-password')
 const incorrect = document.querySelector('.incorrect')
 const incorrectText = document.querySelector('.incorrect-text')
+const spinner = document.querySelector('.spinner-wrapper');
 const baseUrl = 'https://termsbuddy.herokuapp.com/api';
 
 //onclick, check if the input type is [password] if it is, switch the input type [text] 
@@ -28,9 +30,10 @@ const validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0
 form.addEventListener('submit', (e) => {
     e.preventDefault();
     validateForm();
-    console.log(validateForm());
     
-    if (validateForm() === true) { 
+    if (validateForm() === true) {
+        spinner.style.display = 'flex';
+        signinBtn.style.color = '#2b7a78';
         const formData = new FormData(form);
         const data = Object.fromEntries(formData);
         fetch(`${baseUrl}/users/obtain-token/`, {
@@ -44,6 +47,8 @@ form.addEventListener('submit', (e) => {
                 window.location.href = 'https://abshaibu.github.io/test-P71/dashboard/dashboard.html'
                 // window.location.href = 'http://127.0.0.1:5500/dashboard/dashboard.html';
             } else {
+                spinner.style.display = 'none';
+                signinBtn.style.color = '#FEFEFE';
                 incorrect.style.display = 'flex';
                 incorrectText.innerHTML = 'Incorrect email or password';
             }
@@ -65,7 +70,7 @@ form.addEventListener('submit', (e) => {
 // Validate Form
 const inputs = document.querySelectorAll('.form-input');
 inputs.forEach(input => { 
-    input.addEventListener('change', () => {
+    input.addEventListener('blur', () => {
         input.nextElementSibling.style.display = 'none';
         input.style.borderColor = '#BABABA';
         document.querySelector('.mail').innerHTML = 'Email cannot be blank';

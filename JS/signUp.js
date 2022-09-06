@@ -6,7 +6,9 @@ const lastName = document.getElementById('lastName')
 const email = document.getElementById('email')
 const checkBox = document.getElementById('checkbox')
 const incorrect = document.querySelector('.incorrect')
+const signupBtn = document.querySelector('.signup-btn a')
 const incorrectText = document.querySelector('.incorrect-text')
+const spinner = document.querySelector('.spinner-wrapper');
 
 
 let password = true
@@ -39,6 +41,8 @@ form.addEventListener('submit', e => {
     let formValid = firstnameValid && lastnameValid && emailValid && passwordValid && checkBoxChecked
     //submit the form if formValid is true
     if (formValid) {
+        spinner.style.display = 'flex';
+        signupBtn.style.color = '#2B7A78';
         const formData = new FormData(form);
         const data = Object.fromEntries(formData);
         let authToken;
@@ -52,9 +56,13 @@ form.addEventListener('submit', e => {
             body: JSON.stringify(data)
         }).then(res => {
             if (res.status === 201) {
+                spinner.style.display = 'none';
+                signupBtn.style.color = '#FEFEFE';
                 window.location.href = 'https://abshaibu.github.io/test-P71/dashboard/dashboard.html'
                 // window.location.href = 'http://127.0.0.1:5500/dashboard/dashboard.html';
             } else {
+                spinner.style.display = 'none';
+                signupBtn.style.color = '#FEFEFE';
                 incorrect.style.display = 'flex';
                 incorrect.innerHTML = 'Email already exists'
 

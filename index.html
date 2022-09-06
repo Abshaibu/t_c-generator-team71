@@ -365,10 +365,14 @@
                             Subscribe to our newsletter to get important and industry leading updates to keep your T&Cs
                             and Privacy Policy documents up to date
                         </p>
-                        <form>
+                        <form action="" class="newsletter-form">
                             <img src="./images/email.svg" alt="icon of an email">
-                            <div><input type="email" name="email" id="email" placeholder="johndoe@gmail.com" required></div>
-                            <div><button type="submit">Subscribe</button></div>
+                            <div>
+                                <input type="email" name="email" id="email" placeholder="johndoe@gmail.com" required>
+                            </div>
+                            <div>
+                                <button type="submit">Subscribe</button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -454,21 +458,7 @@
         </footer>
     </main>
 
-    <script>
-        document.querySelectorAll('.faq-btn').forEach(faq => faq.addEventListener('click', (e) => {
-                e.target.parentElement.classList.toggle('open');
-        }))
-
-        document.querySelectorAll('.mobile-nav a').forEach(link => link.addEventListener('click', (e) => {
-            document.querySelector('.mobile-nav').classList.toggle('show-menu');
-        }))
-
-        document.querySelector('.menu-toggler').addEventListener('click', () => {
-            document.querySelector('.mobile-nav').classList.toggle('show-menu');
-            console.log(document.querySelector('.menu-toggler-img').src);
-            document.querySelector('.menu-toggler-img').style.backgroundColor = 'red';
-        })
-    </script>
+    <script src="app.js"></script>
 </body>
 
 </html>

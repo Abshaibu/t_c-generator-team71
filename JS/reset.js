@@ -1,4 +1,6 @@
 const form = document.getElementById('form');
+const spinner = document.querySelector('.spinner-wrapper');
+const resetBtn = document.querySelector('.reset-submit');
 const password = document.getElementById('password');
 const incorrect = document.querySelector('.incorrect');
 const errorText = document.querySelector('.error-text');
@@ -7,6 +9,8 @@ form.addEventListener('submit', e => {
     validateForm();
     
     if (validateForm() === true) {
+        spinner.style.display = 'flex';
+        resetBtn.style.color = '#2B7A78';
         let data = {};
         let link = window.location.href;
         const linkToken = link.slice(47);
@@ -25,9 +29,13 @@ form.addEventListener('submit', e => {
             body: JSON.stringify(data)
         }).then(res => {
             if (res.status === 200) {
+                spinner.style.display = 'none';
+                resetBtn.style.color = '#FEFEFE';
                 document.querySelector('.success').style.display = 'block';
                 form.reset();
             } else {
+                spinner.style.display = 'none';
+                resetBtn.style.color = '#FEFEFE';
                 password.nextElementSibling.style.display = 'flex';
                 errorText.innerHTML = 'Password must be at least 8 characters long';
             }
@@ -64,7 +72,7 @@ document.querySelector('.success-close').addEventListener('click', () => {
 
 // Validate Form
 const input = document.querySelector('.form-input');
-input.addEventListener('change', () => {
+input.addEventListener('blur', () => {
     input.nextElementSibling.style.display = 'none';
     input.style.borderColor = '#BABABA';
 })
